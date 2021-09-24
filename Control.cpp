@@ -1,17 +1,14 @@
 #include "Control.h"
 
-#include <Arduino.h>
+//#include <Arduino.h>
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+#ifndef PORTA
+# error No button layout is configured for your device
+#endif
 
 namespace control {
-
-enum ButtonPins {
-  BTN_L = 0,
-  BTN_U = 1,
-  BTN_R = 2,
-  BTN_A = 3,
-  BTN_B = 5,
-  BTN_D = 7,
-};
 
 static volatile uint8_t pins = 0xff;
 
@@ -21,19 +18,26 @@ ISR(PCINT0_vect) {
 
 
 void setup() {
-  pinMode(BTN_L, INPUT_PULLUP);
-  pinMode(BTN_U, INPUT_PULLUP);
-  pinMode(BTN_R, INPUT_PULLUP);
-  pinMode(BTN_A, INPUT_PULLUP);
-  pinMode(BTN_B, INPUT_PULLUP);
-  pinMode(BTN_D, INPUT_PULLUP);
-
-  GIMSK |= 1 << PCIE0;
   /* we could compute this mask from all of the buttons, but we're listening on all of
-     port A, except the i2c pins.  The enum really just allows us to swap button pins
-     amongst each other.
+    port A, except the i2c pins.  The enum really just allows us to swap button pins
+    amongst each other.
   */
+  const uint8_t mask = 0b10101111;
+
+  DDRA &= ~mask;
+  PORTA |= mask;
+  GIMSK |= 1 << PCIE0;
   PCMSK0 |= 0b10101111;
+}
+
+bool isPressed(int button) {
+  return (pins & (1 << button)) == 0;
+}
+
+bool consumePress(int button) {
+  bool rv = (pins & (1 << button)) == 0;
+  pins &= ~(1 << button);
+  return rv;
 }
 
 const char * debug(char * btn_text) {
