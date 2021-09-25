@@ -3,8 +3,13 @@
 
 #include "Control.h"
 #include "Demo.h"
+#include "frogger_game.h"
 
-const SSD1306Device oled;
+
+#define PLAY_DEMO 0
+#define PLAY_FROGGER 1
+
+SSD1306Device oled;
 
 void clear() {
   oled.ssd1306_setpos(0, 0);
@@ -29,10 +34,18 @@ void setup() {
 
   clear();
 
+#if PLAY_DEMO
   demo.setup();
+#elif PLAY_FROGGER
+  frogger::setup();
+#endif
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+#if PLAY_DEMO
   demo.loop();
+#elif PLAY_FROGGER
+  frogger::loop();
+#endif
 }
