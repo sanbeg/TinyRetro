@@ -29,7 +29,7 @@ void ssd1306_char_f6x8(SSD1306Device oled, uint8_t x, uint8_t y, const char ch[]
   }
 }
 
-void doNumber (SSD1306Device oled, int x, int y, int value) {
+void doNumber (SSD1306Device oled, uint8_t x, uint8_t y, int value) {
   char temp[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   itoa(value, temp, 10);
   ssd1306_char_f6x8(oled, x, y, temp);
