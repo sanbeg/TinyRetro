@@ -35,5 +35,4 @@ void doNumber (SSD1306Device oled, int x, int y, int value) {
   ssd1306_char_f6x8(oled, x, y, temp);
 }
 
-
 }

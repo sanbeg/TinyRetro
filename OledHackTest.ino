@@ -2,12 +2,12 @@
 #include "ssd1306xled.h"
 
 #include "Control.h"
-#include "Demo.h"
-#include "frogger_game.h"
 
+#define play_game(g) namespace g{void loop();void setup();} namespace game{using namespace g;}
 
-#define PLAY_DEMO 0
-#define PLAY_FROGGER 1
+//play_game(demo);
+//play_game(frogger);
+play_game(space_attack);
 
 SSD1306Device oled;
 
@@ -22,9 +22,6 @@ void clear() {
   }
 }
 
-
-Demo demo(oled);
-
 void setup() {
   // put your setup code here, to run once:
 
@@ -34,18 +31,10 @@ void setup() {
 
   clear();
 
-#if PLAY_DEMO
-  demo.setup();
-#elif PLAY_FROGGER
-  frogger::setup();
-#endif
+  game::setup();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-#if PLAY_DEMO
-  demo.loop();
-#elif PLAY_FROGGER
-  frogger::loop();
-#endif
+  game::loop();
 }

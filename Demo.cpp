@@ -1,16 +1,21 @@
 
-#include "Demo.h"
 #include "Control.h"
 #include "oled_text.h"
 
-void Demo::setup() {
+namespace demo {
+
+    const SSD1306Device oled;
+    int dotx = 96;
+    int doty = 4;
+
+void setup() {
     using oled_text::ssd1306_char_f6x8;
 
   ssd1306_char_f6x8(oled, 0, 1, "Hello World.");
   ssd1306_char_f6x8(oled, 0, 2, "hacked i2c lib");
 }
 
-void Demo::loop() {
+void loop() {
   using oled_text::ssd1306_char_f6x8;
   char btn_text[7];
   control::debug(btn_text);
@@ -50,4 +55,6 @@ void Demo::loop() {
   oled.ssd1306_send_data_stop();
 
   //delay(128);
+}
+
 }

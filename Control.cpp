@@ -27,7 +27,7 @@ void setup() {
   DDRA &= ~mask;
   PORTA |= mask;
   GIMSK |= 1 << PCIE0;
-  PCMSK0 |= 0b10101111;
+  PCMSK0 |= mask;
 }
 
 bool isPressed(int button) {

@@ -54,7 +54,7 @@ const uint8_t ssd1306_init_sequence [] PROGMEM = {	// Initialization Sequence
   0xAF,			// Set Display ON/OFF - AE=OFF, AF=ON
 };
 
-#if 1 //sequence from attiny arcade; see if this is different when used -w- game.
+#if 0 //sequence from attiny arcade; see if this is different when used -w- game.
 const uint8_t ata_init_seq []  PROGMEM = {
   0xAE, // display off
   0x00, // Set Memory Addressing Mode
