@@ -92,6 +92,7 @@ int moveDelay;            // How long to wait until the next movement of logs et
 int dockedFrogs;          // How many frogs are in the docks at the top
 
 int score;                // Obvious I hope
+uint8_t debt;                 // Jumping backwards accumulates debt
 int topScore;             // High score
 boolean newHigh;          // Is there a new high score?
 byte grid[6][16];         // Grid for items like logs, crocs, cars and lorries
@@ -303,6 +304,7 @@ void playFrogger() {
 
   stopAnimate = 0;
   score = 0;
+  debt = 0;
   moveDelay = MOVEBASE;
   level = 1;
   frogColumn = 8;
@@ -398,6 +400,7 @@ void playFrogger() {
       // should we add a backward frog?
       if (frogRow < 7) {
         frogRow ++;
+        debt ++;
       }
       frogMode = 16;
     }
@@ -406,8 +409,11 @@ void playFrogger() {
     if (control::consumePress(control::BTN_U)) {
       watchDog = 0;   // reset the watchdog so the game doesn't end!
       //control::moveForward = 0;
-
-      score += level;         // increment the score for every move
+      if (debt > 0) {
+        debt --;
+      } else {
+        score += level;         // increment the score for every move
+      }
       doNumber(0, 7, score);  // display new score
       drawFrog(0, 0);         // delete the frog
 
