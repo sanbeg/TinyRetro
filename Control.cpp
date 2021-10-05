@@ -48,7 +48,6 @@ const char * debug(char * btn_text) {
   if (pins & (1 << BTN_B)) btn_text[4] = ' '; else btn_text[4] = 'B';
   if (pins & (1 << BTN_D)) btn_text[5] = ' '; else btn_text[5] = 'D';
   btn_text[6] = 0;
-
   return btn_text;
 }
 }

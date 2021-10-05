@@ -103,10 +103,10 @@ void GravityUpdate(DriftSprite* DSprite);
 void JumpProcedure(DriftSprite* DSprite);
 
 /*
- * 1 = left, 3 = right => PB5, A0
- * 2 =  up, 4 = down => PB3, A3
- * 5 = action, PB1, 1
- */
+   1 = left, 3 = right => PB5, A0
+   2 =  up, 4 = down => PB3, A3
+   5 = action, PB1, 1
+*/
 
 void loop() {
   //digitalWrite(3, LOW);
@@ -137,25 +137,25 @@ NEXTLEVEL:
 #define LBACKUP  if  ((CollisionCheck(&MainSprite)==1)) {MainSprite.x4decalage++;}
   while (1) {
     if (control::isPressed(control::BTN_R))  {
-      if (timer % 4 == 0) {
-        MainAnim++; if (MainAnim > 2) {
-          MainAnim = 0;
-        }
+      if ((timer % 4 == 0) && (++MainAnim > 2)) {
+        MainAnim = 0;
       }
       LorR = 0;
-      MainSprite.x4decalage++; RBACKUP; if (MainSprite.x4decalage > 3) {
+      MainSprite.x4decalage++;
+      RBACKUP;
+      if (MainSprite.x4decalage > 3) {
         MainSprite.x4decalage = 0;
         MainSprite.MainPositionOnGridH++;
       }
     }
     if (control::isPressed(control::BTN_L)) {
-      if (timer % 4 == 0) {
-        MainAnim++; if (MainAnim > 2) {
-          MainAnim = 0;
-        }
+      if ((timer % 4 == 0) && (++MainAnim > 2)) {
+        MainAnim = 0;
       }
       LorR = 1;
-      MainSprite.x4decalage--; LBACKUP; if (MainSprite.x4decalage < 0) {
+      MainSprite.x4decalage--;
+      LBACKUP;
+      if (MainSprite.x4decalage < 0) {
         MainSprite.x4decalage = 3;
         MainSprite.MainPositionOnGridH--;
       }
@@ -168,10 +168,10 @@ NEXTLEVEL:
       LIVE--;
       if (LIVE == 0) {
         goto RESTARTGAME;
-      } goto RESTARTLEVEL;
+      } 
+      goto RESTARTLEVEL;
     }
-    for (uint8_t x = 0; x < 33; x++)
-    {
+    for (uint8_t x = 0; x < 33; x++) {
 #define LevelS (x+scrool)/4 //(x+scrool)/4
       switch (levelType) {
         case (0): LevelMult = pgm_read_byte(&Level0[LevelS]); break;
@@ -463,7 +463,8 @@ int8_t CollisionCheck(DriftSprite* DSprite) {
   for (yscan = -1; yscan < 3; yscan++) {
     for (xscan = -1; xscan < 3; xscan++) {
       if (NoTested) {
-        if ((x1 > bx2) || (x2 < bx1) || (y1 > by3) || (y3 < by1)) {} else {
+        if ((x1 > bx2) || (x2 < bx1) || (y1 > by3) || (y3 < by1)) {
+          } else {
           return 1;
         }
       }
@@ -576,6 +577,7 @@ void Tiny_Flip(DriftSprite* DSprite) {
           VSlideOut = VSlide[DSprite->y8decalage];
         }
         decalIN;
+        #if 0
         if (LorR == 1) {
           if (MainAnim == 0) {
             for (t = 0; t < 4; t++) {
@@ -615,6 +617,36 @@ void Tiny_Flip(DriftSprite* DSprite) {
             } Start = 0;
           }
         }
+        #else
+          const uint8_t * sprite;
+         if (LorR == 1) {
+          if (MainAnim == 0) {
+            sprite = sprite20;
+          }
+          if (MainAnim == 1) {
+            sprite = sprite22;
+          }
+          if (MainAnim == 2) {
+            sprite = sprite24;
+          }
+        } else {
+          if (MainAnim == 0) {
+            sprite = sprite26;
+          }
+          if (MainAnim == 1) {
+            sprite = sprite28;
+          }
+          if (MainAnim == 2) {
+            sprite = sprite30;
+          }
+        }
+         for (t = 0; t < 4; t++) {
+              SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t])*VSlideOut);
+              PrecessQuit
+            } Start = 0;
+        #endif
+
+        
       } else if (((Map[m][n] == 6) || (Map[m][n] == 66)) && (while1 != 0)) {
         if (Map[m][n] == 66) {
           VSlideOut = ((100 / VSlide[8 - DSprite->y8decalage]) / 100);
