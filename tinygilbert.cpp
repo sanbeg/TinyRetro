@@ -168,7 +168,7 @@ NEXTLEVEL:
       LIVE--;
       if (LIVE == 0) {
         goto RESTARTGAME;
-      } 
+      }
       goto RESTARTLEVEL;
     }
     for (uint8_t x = 0; x < 33; x++) {
@@ -464,7 +464,7 @@ int8_t CollisionCheck(DriftSprite* DSprite) {
     for (xscan = -1; xscan < 3; xscan++) {
       if (NoTested) {
         if ((x1 > bx2) || (x2 < bx1) || (y1 > by3) || (y3 < by1)) {
-          } else {
+        } else {
           return 1;
         }
       }
@@ -577,7 +577,7 @@ void Tiny_Flip(DriftSprite* DSprite) {
           VSlideOut = VSlide[DSprite->y8decalage];
         }
         decalIN;
-        #if 0
+#if 0
         if (LorR == 1) {
           if (MainAnim == 0) {
             for (t = 0; t < 4; t++) {
@@ -617,9 +617,9 @@ void Tiny_Flip(DriftSprite* DSprite) {
             } Start = 0;
           }
         }
-        #else
-          const uint8_t * sprite;
-         if (LorR == 1) {
+#else
+        const uint8_t * sprite;
+        if (LorR == 1) {
           if (MainAnim == 0) {
             sprite = sprite20;
           }
@@ -640,20 +640,24 @@ void Tiny_Flip(DriftSprite* DSprite) {
             sprite = sprite30;
           }
         }
-         for (t = 0; t < 4; t++) {
-              SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t])*VSlideOut);
-              PrecessQuit
-            } Start = 0;
-        #endif
+        for (t = 0; t < 4; t++) {
+          SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t])*VSlideOut);
+          PrecessQuit
+        } Start = 0;
+#endif
 
-        
+
       } else if (((Map[m][n] == 6) || (Map[m][n] == 66)) && (while1 != 0)) {
         if (Map[m][n] == 66) {
           VSlideOut = ((100 / VSlide[8 - DSprite->y8decalage]) / 100);
         } else {
           VSlideOut = VSlide[DSprite->y8decalage];
         }
+        uint8_t * sprite;
+
         if (LorR == 1) {
+
+#if 0
           if (MainAnim == 0) {
             for (t = 0; t < 4; t++) {
               SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite21[t])*VSlideOut);
@@ -672,7 +676,27 @@ void Tiny_Flip(DriftSprite* DSprite) {
               PrecessQuit Start = DSprite->x4decalage;
             }
           }
+#else
+          switch (MainAnim) {
+            case 0:
+              sprite = sprite21;
+              break;
+            case 1:
+              sprite = sprite23;
+              break;
+            case 2:
+              sprite = sprite25;
+              break;
+          }
+          for (t = 0; t < 4; t++) {
+            SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t])*VSlideOut);
+            PrecessQuit
+            Start = DSprite->x4decalage;
+          }
+#endif
         } else {
+
+#if 0
           if (MainAnim == 0) {
             for (t = 0; t < 4; t++) {
               SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite27[t])*VSlideOut);
@@ -691,7 +715,27 @@ void Tiny_Flip(DriftSprite* DSprite) {
               PrecessQuit Start = DSprite->x4decalage;
             }
           }
+#else
+          switch (MainAnim) {
+            case 0:
+              sprite = sprite27;
+              break;
+            case 1:
+              sprite = sprite29;
+              break;
+            case 2:
+              sprite = sprite31;
+              break;
+          }
+          for (t = 0; t < 4; t++) {
+            SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t])*VSlideOut);
+            PrecessQuit
+            Start = DSprite->x4decalage;
+          }
+#endif
+
         }
+
         //fin main sprite
       } else if ((Map[m][n] == 1) && (while1 != 0)) {
         for (t = Start; t < 4; t++) {
