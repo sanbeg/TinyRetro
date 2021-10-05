@@ -19,6 +19,7 @@
 //the code work at 16 MHZ internal
 //and use ssd1306xled Library for SSD1306 oled display 128x64
 #include "ssd1306xled.h"
+#include "Control.h"
 
 namespace gilbert {
 
@@ -42,18 +43,16 @@ uint8_t injur = 0;
 uint8_t LIVE = 0;
 
 void setup() {
-  _delay_ms(40);
+  //_delay_ms(40);
   SSD1306.ssd1306_init();
-  _delay_ms(40);
+  //_delay_ms(40);
   DDRB = DDRB | 0b00010000;
-  pinMode(A0, INPUT);
-  pinMode(1, INPUT);
+  control::setup();
 }
 
 uint8_t delKey(uint8_t Xin, uint8_t Yin) {
-  int8_t x = 0;
-  for (x = 0; x < 23; x++) {
-    if   ((key[x][0] == 0) && (key[x][1] == 0)) {
+  for (int8_t x = 0; x < 23; x++) {
+    if ((key[x][0] == 0) && (key[x][1] == 0)) {
       return 11;
     }
     if ((key[x][0] == Xin) && (key[x][1] == Yin)) {
@@ -103,8 +102,14 @@ void UpdateVerticalSlide(DriftSprite* DSprite);
 void GravityUpdate(DriftSprite* DSprite);
 void JumpProcedure(DriftSprite* DSprite);
 
+/*
+ * 1 = left, 3 = right => PB5, A0
+ * 2 =  up, 4 = down => PB3, A3
+ * 5 = action, PB1, 1
+ */
+
 void loop() {
-  digitalWrite(3, LOW);
+  //digitalWrite(3, LOW);
 RESTARTGAME:
   sound(1); sound(2); sound(2); sound(1); sound(2); sound(2);
   _delay_ms(200);
@@ -113,7 +118,7 @@ RESTARTGAME:
   SSD1306.ssd1306_draw_bmp(32, 4, 96, 8, start);
   _delay_ms(400);
   while (1) {
-    if (digitalRead(1) == LOW) {
+    if (control::isPressed(control::BTN_A)) {
       sound(1);
       break;
     }
@@ -131,7 +136,7 @@ NEXTLEVEL:
 #define RBACKUP  if  ((CollisionCheck(&MainSprite)==1)){MainSprite.x4decalage--;}
 #define LBACKUP  if  ((CollisionCheck(&MainSprite)==1)) {MainSprite.x4decalage++;}
   while (1) {
-    if ((analogRead(A0) > 500) && (analogRead(A0) < 750))  {
+    if (control::isPressed(control::BTN_R))  {
       if (timer % 4 == 0) {
         MainAnim++; if (MainAnim > 2) {
           MainAnim = 0;
@@ -143,7 +148,7 @@ NEXTLEVEL:
         MainSprite.MainPositionOnGridH++;
       }
     }
-    if ((analogRead(A0) >= 750) && (analogRead(A0) < 950)) {
+    if (control::isPressed(control::BTN_L)) {
       if (timer % 4 == 0) {
         MainAnim++; if (MainAnim > 2) {
           MainAnim = 0;
@@ -228,12 +233,12 @@ NEXTLEVEL:
     if (Jump == 0) {
       GravityUpdate(&MainSprite);
     }
-    if ((digitalRead(1) == LOW) && (Jump == 0) && (jumpcancel == 0) && (CollisionCheck(&MainSprite) == 0)) {
+    if (control::isPressed(control::BTN_A) && (Jump == 0) && (jumpcancel == 0) && (CollisionCheck(&MainSprite) == 0)) {
       if (MainSprite.y8decalage == 0) {
         Jump = 3;
       }
     }
-    if (digitalRead(1) == HIGH) {
+    if (!control::isPressed(control::BTN_A)) {
       jumpcancel = 0;
     }
     if (Jump > 0) {

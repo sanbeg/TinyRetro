@@ -6,8 +6,9 @@
 #define play_game(g) namespace g{void loop();void setup();} namespace game{using namespace g;}
 
 //play_game(demo);
-play_game(frogger);
+//play_game(frogger);
 //play_game(space_attack);
+play_game(gilbert);
 
 SSD1306Device oled;
 
