@@ -40,7 +40,7 @@
 #include "Control.h"
 
 
-namespace frogger {
+namespace frogger_ata {
 // Uncomment this #define to make the logs smaller (/thinner)
 //#define SMALLLOGS
 
