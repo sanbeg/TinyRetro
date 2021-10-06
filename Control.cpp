@@ -3,6 +3,7 @@
 //#include <Arduino.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <util/atomic.h>
 
 #ifndef PORTA
 # error No button layout is configured for your device
@@ -31,13 +32,15 @@ void setup() {
 }
 
 bool isPressed(int button) {
-  return (pins & (1 << button)) == 0;
+  return (pins & (uint8_t)(1 << button)) == 0;
 }
 
 bool consumePress(int button) {
-  bool rv = (pins & (1 << button)) == 0;
-  pins |= (1 << button);
-  return rv;
+  ATOMIC_BLOCK(ATOMIC_FORCEON) {
+    bool rv = (pins & (1 << button)) == 0;
+    pins |= (1 << button);
+    return rv;
+  }
 }
 
 const char * debug(char * btn_text) {

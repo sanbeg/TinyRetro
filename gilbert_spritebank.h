@@ -23,10 +23,10 @@
 
 typedef struct DriftSprite{
   uint8_t DriftGrid[2][2];
-  int8_t x4decalage;
-  int8_t y8decalage;
-  int16_t MainPositionOnGridH;
-  int16_t MainPositionOnGridV;
+  int8_t x4decalage; // 0 - 4
+  int8_t y8decalage; // 0 - 8
+  int8_t MainPositionOnGridH;
+  int8_t MainPositionOnGridV;
 }DriftSprite;
 
 const uint8_t sprite1  [] PROGMEM =  {0xFF, 0x99,0xE7, 0x99, };  //bloc1 gauche

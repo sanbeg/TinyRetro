@@ -25,22 +25,27 @@ namespace gilbert {
 
 #include "gilbert_spritebank.h"
 
+const uint8_t MAX_TIMER = 30; // was 60, controls key spinning effect.
+const uint8_t TIMER_INC = 2;  // was 4, controls walking animation
+
 uint8_t Map[8][34] = {{0}};
-uint8_t timer = 0;
+uint8_t timer = 0; // 0 -60, or less
 int8_t scrool = 0;
-int8_t step4 = 0;
-uint8_t MainAnim = 0, LorR = 1;
-int8_t Jump = 0;
-int8_t  jumpcancel = 0;
+int8_t step4 = 0; // -1 - 4 (then trimmed to 0 - 3
+uint8_t MainAnim = 0; // 0 - 2 -> sprite frame
+bool LorR = 1; // 0 - 1 -> sprite direction
+int8_t Jump = 0;  // 0 - 3
+bool  jumpcancel = 0; // 0 - 1
 const float VSlide[9] = {1, 2, 4, 8, 16, 32, 64, 128, 256};
 uint8_t key[20][2] = {{0}};
 uint8_t keyS = 0;
 float VSlideOut = 0;
-uint8_t LevelMult = 0, levelType = 0;
+//uint8_t LevelMult = 0; // could be local?
+uint8_t levelType = 0; // current level 0 - 9 (10?)
 uint8_t ByteMem = 0;
-uint8_t visible = 1;
-uint8_t injur = 0;
-uint8_t LIVE = 0;
+bool visible = 1; // 0 - 1
+uint8_t injur = 0; // health -> 0 -30
+uint8_t LIVE = 0; // lives -> 0 - 7
 
 void setup() {
   //_delay_ms(40);
@@ -137,7 +142,7 @@ NEXTLEVEL:
 #define LBACKUP  if  ((CollisionCheck(&MainSprite)==1)) {MainSprite.x4decalage++;}
   while (1) {
     if (control::isPressed(control::BTN_R))  {
-      if ((timer % 4 == 0) && (++MainAnim > 2)) {
+      if ((timer % TIMER_INC == 0) && (++MainAnim > 2)) {
         MainAnim = 0;
       }
       LorR = 0;
@@ -149,7 +154,7 @@ NEXTLEVEL:
       }
     }
     if (control::isPressed(control::BTN_L)) {
-      if ((timer % 4 == 0) && (++MainAnim > 2)) {
+      if ((timer % TIMER_INC == 0) && (++MainAnim > 2)) {
         MainAnim = 0;
       }
       LorR = 1;
@@ -171,6 +176,7 @@ NEXTLEVEL:
       }
       goto RESTARTLEVEL;
     }
+    uint8_t LevelMult = 0;
     for (uint8_t x = 0; x < 33; x++) {
 #define LevelS (x+scrool)/4 //(x+scrool)/4
       switch (levelType) {
@@ -350,7 +356,7 @@ NEXTLEVEL:
     UpdateVerticalSlide(&MainSprite);
     Tiny_Flip(&MainSprite);
     timer++;
-    if (timer > 60) {
+    if (timer > MAX_TIMER) {
       timer = 0;
     }
   }
@@ -492,7 +498,7 @@ void ResetVarNextLevel(void) {
     key[x][1] = 0;
   }
   keyS = 0;
-  LevelMult = 0;
+  //LevelMult = 0;
 }
 
 void NextLevel(void) {
@@ -679,7 +685,7 @@ void Tiny_Flip(DriftSprite* DSprite) {
             sprite = sprite16;
             break;
           case 11:
-            sprite = (timer > 30) ? sprite11 : sprite12;
+            sprite = (timer > MAX_TIMER/2) ? sprite11 : sprite12;
             break;
           case 13:
             sprite = sprite13;
