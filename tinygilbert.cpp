@@ -612,7 +612,7 @@ void Tiny_Flip(DriftSprite* DSprite) {
         } else {
           VSlideOut = VSlide[DSprite->y8decalage];
         }
-        
+
         uint8_t * sprite = 0;
         if (LorR == 1) {
           switch (MainAnim) {
@@ -626,13 +626,6 @@ void Tiny_Flip(DriftSprite* DSprite) {
               sprite = sprite25;
               break;
           }
-          /*
-          for (t = 0; t < 4; t++) {
-            SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t])*VSlideOut);
-            PrecessQuit
-            Start = DSprite->x4decalage;
-          }
-          */
         } else {
           switch (MainAnim) {
             case 0:
@@ -645,20 +638,15 @@ void Tiny_Flip(DriftSprite* DSprite) {
               sprite = sprite31;
               break;
           }
-          /*
+        }
+
+        if (sprite) {
           for (t = 0; t < 4; t++) {
             SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t])*VSlideOut);
             PrecessQuit
             Start = DSprite->x4decalage;
           }
-*/
         }
-if (sprite)
-   for (t = 0; t < 4; t++) {
-            SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t])*VSlideOut);
-            PrecessQuit
-            Start = DSprite->x4decalage;
-          }
 
         //fin main sprite
 #if 1
@@ -733,7 +721,7 @@ if (sprite)
           }
           Start = 0;
         }
-      }   
+      }
 #endif
       else if ((Map[m][n] == 11) && (while1 != 0)) {
         if (timer > 30) {
@@ -756,7 +744,7 @@ if (sprite)
           PrecessQuit
         } Start = 0;
       }
-      
+
       else {
         if (while1 != 0) {
           for (t = Start; t < 4; t++) {
