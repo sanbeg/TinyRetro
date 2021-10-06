@@ -653,44 +653,7 @@ void Tiny_Flip(DriftSprite* DSprite) {
         }
 
         //fin main sprite
-#if 1
-      } else if ((Map[m][n] == 1) && (while1 != 0)) {
-        for (t = Start; t < 4; t++) {
-          SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite1[t]));
-          PrecessQuit
-        } Start = 0;
-      } else if ((Map[m][n] == 2) && (while1 != 0)) {
-        for (t = Start; t < 4; t++) {
-          SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite2[t]));
-          PrecessQuit
-        } Start = 0;
-      } else if ((Map[m][n] == 3) && (while1 != 0)) {
-        for (t = Start; t < 4; t++) {
-          SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite3[t]));
-          PrecessQuit
-        } Start = 0;
-      } else if ((Map[m][n] == 4) && (while1 != 0)) {
-        for (t = Start; t < 4; t++) {
-          SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite4[t]));
-          PrecessQuit
-        } Start = 0;
-      } else if ((Map[m][n] == 8) && (while1 != 0)) {
-        for (t = Start; t < 4; t++) {
-          SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite8[t]));
-          PrecessQuit
-        } Start = 0;
-      } else if ((Map[m][n] == 15) && (while1 != 0)) {
-        for (t = Start; t < 4; t++) {
-          SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite15[t]));
-          PrecessQuit
-        } Start = 0;
-      } else if ((Map[m][n] == 16) && (while1 != 0)) {
-        for (t = Start; t < 4; t++) {
-          SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite16[t]));
-          PrecessQuit
-        } Start = 0;
-      }
-#else
+
       } else if (while1 != 0) {
         uint8_t * sprite = 0;
         switch (Map[m][n]) {
@@ -715,10 +678,25 @@ void Tiny_Flip(DriftSprite* DSprite) {
           case 16:
             sprite = sprite16;
             break;
+          case 11:
+            sprite = (timer > 30) ? sprite11 : sprite12;
+            break;
+          case 13:
+            sprite = sprite13;
+            break;
+          case 14:
+            sprite = sprite14;
+            break;
           default:
             sprite = 0;
+            for (t = Start; t < 4; t++) {
+              SSD1306.ssd1306_send_byte(0x00);
+              PrecessQuit
+            }
+            Start = 0;
+            break;
         }
-        if (sprite != 0) {
+        if (sprite) {
           for (t = Start; t < 4; t++) {
             SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t]));
             PrecessQuit
@@ -726,36 +704,7 @@ void Tiny_Flip(DriftSprite* DSprite) {
           Start = 0;
         }
       }
-#endif
-      else if ((Map[m][n] == 11) && (while1 != 0)) {
-        if (timer > 30) {
-          for (t = Start; t < 4; t++) {
-            SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite11[t])); PrecessQuit
-          } Start = 0;
-        } else {
-          for (t = Start; t < 4; t++) {
-            SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite12[t])); PrecessQuit
-          } Start = 0;
-        }
-      } else if ((Map[m][n] == 13) && (while1 != 0)) {
-        for (t = Start; t < 4; t++) {
-          SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite13[t]));
-          PrecessQuit
-        } Start = 0;
-      } else if ((Map[m][n] == 14) && (while1 != 0)) {
-        for (t = Start; t < 4; t++) {
-          SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite14[t]));
-          PrecessQuit
-        } Start = 0;
-      }
 
-      else {
-        if (while1 != 0) {
-          for (t = Start; t < 4; t++) {
-            SSD1306.ssd1306_send_byte(0x00); PrecessQuit
-          } Start = 0;
-        }
-      }
       if (while1 != 0) {
         n++;
       }
