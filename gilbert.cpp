@@ -275,7 +275,7 @@ NEXTLEVEL:
         sound(2);
       }
       if (Pictup2(13) || Pictup2(14)) {
-        if ((pgm_read_byte(&KeyinLevel[levelType]) == keyS) && (Jump > 0)) {
+        if ((pgm_read_byte(&KeyinLevel[levelType]) == keyS) && (/*(Jump > 0) ||*/ control::isPressed(control::BTN_U))) {
           NextLevel();
           goto NEXTLEVEL;
         }
@@ -328,7 +328,7 @@ NEXTLEVEL:
         sound(2);
       }
       if (Pictup4(13) || Pictup4(14)) {
-        if ((pgm_read_byte(&KeyinLevel[levelType]) == keyS) && (Jump > 0)) {
+        if ((pgm_read_byte(&KeyinLevel[levelType]) == keyS) && (/*(Jump > 0) ||*/ control::isPressed(control::BTN_U))) {
           NextLevel();
           goto NEXTLEVEL;
         }
@@ -540,7 +540,7 @@ void Tiny_Flip(DriftSprite* DSprite) {
       SSD1306.ssd1306_send_byte(0x00);
     }
   }
-  if ((pgm_read_byte(&KeyinLevel[levelType]) == keyS) && (timer <= 30)) {
+  if ((pgm_read_byte(&KeyinLevel[levelType]) == keyS) && (/*timer <= 30*/ (timer/8)%2 )) {
     for (x = 0; x < 4; x++) {
       SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite12[x]));
     }
