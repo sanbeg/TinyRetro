@@ -580,24 +580,28 @@ void Tiny_Flip(DriftSprite* DSprite) {
 
         const uint8_t * sprite;
         if (LorR == 1) {
-          if (MainAnim == 0) {
-            sprite = sprite20;
-          }
-          if (MainAnim == 1) {
-            sprite = sprite22;
-          }
-          if (MainAnim == 2) {
-            sprite = sprite24;
+          switch (MainAnim) {
+            case 0:
+              sprite = sprite20;
+              break;
+            case 1:
+              sprite = sprite22;
+              break;
+            case 2:
+              sprite = sprite24;
+              break;
           }
         } else {
-          if (MainAnim == 0) {
-            sprite = sprite26;
-          }
-          if (MainAnim == 1) {
-            sprite = sprite28;
-          }
-          if (MainAnim == 2) {
-            sprite = sprite30;
+          switch (MainAnim) {
+            case 0:
+              sprite = sprite26;
+              break;
+            case 1:
+              sprite = sprite28;
+              break;
+            case 2:
+              sprite = sprite30;
+              break;
           }
         }
         for (t = 0; t < 4; t++) {
