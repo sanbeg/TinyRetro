@@ -577,47 +577,7 @@ void Tiny_Flip(DriftSprite* DSprite) {
           VSlideOut = VSlide[DSprite->y8decalage];
         }
         decalIN;
-#if 0
-        if (LorR == 1) {
-          if (MainAnim == 0) {
-            for (t = 0; t < 4; t++) {
-              SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite20[t])*VSlideOut);
-              PrecessQuit
-            } Start = 0;
-          }
-          if (MainAnim == 1) {
-            for (t = 0; t < 4; t++) {
-              SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite22[t])*VSlideOut);
-              PrecessQuit
-            } Start = 0;
-          }
-          if (MainAnim == 2) {
-            for (t = 0; t < 4; t++) {
-              SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite24[t])*VSlideOut);
-              PrecessQuit
-            } Start = 0;
-          }
-        } else {
-          if (MainAnim == 0) {
-            for (t = 0; t < 4; t++) {
-              SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite26[t])*VSlideOut);
-              PrecessQuit
-            } Start = 0;
-          }
-          if (MainAnim == 1) {
-            for (t = 0; t < 4; t++) {
-              SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite28[t])*VSlideOut);
-              PrecessQuit
-            } Start = 0;
-          }
-          if (MainAnim == 2) {
-            for (t = 0; t < 4; t++) {
-              SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite30[t])*VSlideOut);
-              PrecessQuit
-            } Start = 0;
-          }
-        }
-#else
+
         const uint8_t * sprite;
         if (LorR == 1) {
           if (MainAnim == 0) {
@@ -644,7 +604,6 @@ void Tiny_Flip(DriftSprite* DSprite) {
           SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t])*VSlideOut);
           PrecessQuit
         } Start = 0;
-#endif
 
 
       } else if (((Map[m][n] == 6) || (Map[m][n] == 66)) && (while1 != 0)) {
@@ -653,30 +612,9 @@ void Tiny_Flip(DriftSprite* DSprite) {
         } else {
           VSlideOut = VSlide[DSprite->y8decalage];
         }
-        uint8_t * sprite;
-
+        
+        uint8_t * sprite = 0;
         if (LorR == 1) {
-
-#if 0
-          if (MainAnim == 0) {
-            for (t = 0; t < 4; t++) {
-              SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite21[t])*VSlideOut);
-              PrecessQuit Start = DSprite->x4decalage;
-            }
-          }
-          if (MainAnim == 1) {
-            for (t = 0; t < 4; t++) {
-              SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite23[t])*VSlideOut);
-              PrecessQuit Start = DSprite->x4decalage;
-            }
-          }
-          if (MainAnim == 2) {
-            for (t = 0; t < 4; t++) {
-              SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite25[t])*VSlideOut);
-              PrecessQuit Start = DSprite->x4decalage;
-            }
-          }
-#else
           switch (MainAnim) {
             case 0:
               sprite = sprite21;
@@ -688,34 +626,14 @@ void Tiny_Flip(DriftSprite* DSprite) {
               sprite = sprite25;
               break;
           }
+          /*
           for (t = 0; t < 4; t++) {
             SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t])*VSlideOut);
             PrecessQuit
             Start = DSprite->x4decalage;
           }
-#endif
+          */
         } else {
-
-#if 0
-          if (MainAnim == 0) {
-            for (t = 0; t < 4; t++) {
-              SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite27[t])*VSlideOut);
-              PrecessQuit Start = DSprite->x4decalage;
-            }
-          }
-          if (MainAnim == 1) {
-            for (t = 0; t < 4; t++) {
-              SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite29[t])*VSlideOut);
-              PrecessQuit Start = DSprite->x4decalage;
-            }
-          }
-          if (MainAnim == 2) {
-            for (t = 0; t < 4; t++) {
-              SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite31[t])*VSlideOut);
-              PrecessQuit Start = DSprite->x4decalage;
-            }
-          }
-#else
           switch (MainAnim) {
             case 0:
               sprite = sprite27;
@@ -727,16 +645,23 @@ void Tiny_Flip(DriftSprite* DSprite) {
               sprite = sprite31;
               break;
           }
+          /*
           for (t = 0; t < 4; t++) {
             SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t])*VSlideOut);
             PrecessQuit
             Start = DSprite->x4decalage;
           }
-#endif
-
+*/
         }
+if (sprite)
+   for (t = 0; t < 4; t++) {
+            SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t])*VSlideOut);
+            PrecessQuit
+            Start = DSprite->x4decalage;
+          }
 
         //fin main sprite
+#if 1
       } else if ((Map[m][n] == 1) && (while1 != 0)) {
         for (t = Start; t < 4; t++) {
           SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite1[t]));
@@ -773,6 +698,43 @@ void Tiny_Flip(DriftSprite* DSprite) {
           PrecessQuit
         } Start = 0;
       }
+#else
+      } else if (while1 != 0) {
+        uint8_t * sprite = 0;
+        switch (Map[m][n]) {
+          case 1:
+            sprite = sprite1;
+            break;
+          case 2:
+            sprite = sprite2;
+            break;
+          case 3:
+            sprite = sprite3;
+            break;
+          case 4:
+            sprite = sprite4;
+            break;
+          case 8:
+            sprite = sprite8;
+            break;
+          case 15:
+            sprite = sprite15;
+            break;
+          case 16:
+            sprite = sprite16;
+            break;
+          default:
+            sprite = 0;
+        }
+        if (sprite != 0) {
+          for (t = Start; t < 4; t++) {
+            SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t]));
+            PrecessQuit
+          }
+          Start = 0;
+        }
+      }   
+#endif
       else if ((Map[m][n] == 11) && (while1 != 0)) {
         if (timer > 30) {
           for (t = Start; t < 4; t++) {
@@ -794,6 +756,7 @@ void Tiny_Flip(DriftSprite* DSprite) {
           PrecessQuit
         } Start = 0;
       }
+      
       else {
         if (while1 != 0) {
           for (t = Start; t < 4; t++) {
