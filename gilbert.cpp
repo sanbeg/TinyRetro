@@ -36,7 +36,7 @@ uint8_t MainAnim = 0; // 0 - 2 -> sprite frame
 bool LorR = 1; // 0 - 1 -> sprite direction
 int8_t Jump = 0;  // 0 - 3
 bool  jumpcancel = 0; // 0 - 1
-const float VSlide[9] = {1, 2, 4, 8, 16, 32, 64, 128, 256};
+//const float VSlide[9] = {1, 2, 4, 8, 16, 32, 64, 128, 256};
 uint8_t key[20][2] = {{0}};
 uint8_t keyS = 0;
 float VSlideOut = 0;
@@ -46,6 +46,10 @@ uint8_t ByteMem = 0;
 bool visible = 1; // 0 - 1
 uint8_t injur = 0; // health -> 0 -30
 uint8_t LIVE = 0; // lives -> 0 - 7
+
+float vslide(int n) {
+  return (float) (1 << n);
+}
 
 void setup() {
   //_delay_ms(40);
@@ -578,9 +582,9 @@ void Tiny_Flip(DriftSprite* DSprite) {
         // main sprite
       } else if (((Map[m][n] == 5) || (Map[m][n] == 55)) && (while1 != 0)) {
         if (Map[m][n] == 55) {
-          VSlideOut = ((100 / VSlide[8 - DSprite->y8decalage]) / 100);
+          VSlideOut = ((100 / vslide(8 - DSprite->y8decalage)) / 100);
         } else {
-          VSlideOut = VSlide[DSprite->y8decalage];
+          VSlideOut = vslide(DSprite->y8decalage);
         }
         decalIN;
 
@@ -618,9 +622,9 @@ void Tiny_Flip(DriftSprite* DSprite) {
 
       } else if (((Map[m][n] == 6) || (Map[m][n] == 66)) && (while1 != 0)) {
         if (Map[m][n] == 66) {
-          VSlideOut = ((100 / VSlide[8 - DSprite->y8decalage]) / 100);
+          VSlideOut = ((100 / vslide(8 - DSprite->y8decalage)) / 100);
         } else {
-          VSlideOut = VSlide[DSprite->y8decalage];
+          VSlideOut = vslide(DSprite->y8decalage);
         }
 
         uint8_t * sprite = 0;
