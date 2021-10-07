@@ -274,7 +274,7 @@ void displayTitle(void) {
       lcdDisplay_send_byte(pgm_read_byte(&titleBmp[incr]));
       incr++;
     }
-        oled.ssd1306_send_data_stop();
+    oled.ssd1306_send_data_stop();
   }
 }
 
@@ -404,7 +404,7 @@ void loop() {
     if (incr == 0) delay(1700);
   }
 
-    displayOpenScreen(100);
+  displayOpenScreen(100);
 
   while (gb.buttons.pressed(BTN_A) == false && gb.buttons.pressed(BTN_B) == false ) {
     //displayOpenScreen(100);
@@ -475,13 +475,13 @@ void lcdDisplay_char_f6x8(uint8_t x, uint8_t y, const char ch[]) {
       y++;
     }
     lcdDisplay_setpos(x, y);
-      oled.ssd1306_send_data_start();
+    oled.ssd1306_send_data_start();
 
     for (i = 0; i < 6; i++)
     {
       lcdDisplay_send_byte(pgm_read_byte(&lcdDisplayxled_font6x8[c * 6 + i]));
     }
-      oled.ssd1306_send_data_stop();
+    oled.ssd1306_send_data_stop();
 
     x += 6;
     j++;
@@ -544,15 +544,15 @@ void playFrogger() {
     if (frogColumn * 8 < screenLeft + 15) screenLeft--;
     if (frogColumn * 8 > screenLeft + 60) screenLeft++;
 
-    #else
-      if (frogRow == 1 || frogRow == 3) {
-      screenLeft = frogColumn*8 - 30 - blockShiftL;
-      } else if (frogRow == 2) {
-      screenLeft = frogColumn*8 - 30 + blockShiftR;
-      } else {
-      screenLeft = frogColumn*8 - 30;
-      }
-  #endif  
+#else
+    if (frogRow == 1 || frogRow == 3) {
+      screenLeft = frogColumn * 8 - 30 - blockShiftL;
+    } else if (frogRow == 2) {
+      screenLeft = frogColumn * 8 - 30 + blockShiftR;
+    } else {
+      screenLeft = frogColumn * 8 - 30;
+    }
+#endif
 
     screenTop =  frogRow - 3;
 
@@ -890,7 +890,7 @@ void drawGameScreen(byte mode) {
   for (byte row = 0; row < 6; row += 2) {
     if (row >= 0 && row < 3) inverse = 1; else inverse = 0;                             // draw everything (except the frog) in inverse video on the river rows (0,1,2)
     lcdDisplay_setpos(0, row + 1); // +1 because row 0 here is actually row 1 on the screen
-      oled.ssd1306_send_data_start();
+    oled.ssd1306_send_data_start();
 
     for (byte incr = 0; incr < 7 - blockShiftL; incr++) if (grid[row][15] == 0) {       // cover the tiny bit to the far left of the screen up to wherever the main blocks will be drawn (depends on how far they are shifted)
         sendByte(0, inverse);                                                             // draw an empty 8-bit line if there's nothing wrapping around
@@ -911,7 +911,7 @@ void drawGameScreen(byte mode) {
     }
     // fill in the bit to the right of the main blocks
       for (byte incr = 0; incr < blockShiftL; incr++) if (grid[row][15] == 0) sendByte(0, inverse); else sendByte(pgm_read_byte(&bitmaps[grid[row][15] - 1][incr]), inverse);
-  oled.ssd1306_send_data_stop();
+    oled.ssd1306_send_data_stop();
 
   }
   if (frogColumn == 0) drawFrog(mode, 1); // this covers the exceptional case where the frog is in the far left colum, in which case the normal routine can't draw it when it's on the road
@@ -920,7 +920,7 @@ void drawGameScreen(byte mode) {
   for (byte row = 1; row < 6; row += 2) {
     if (row > 0 && row < 3) inverse = 1; else inverse = 0;
     lcdDisplay_setpos(0, row + 1);
-      oled.ssd1306_send_data_start();
+    oled.ssd1306_send_data_start();
 
       for (byte incr = 0; incr < blockShiftR; incr++) if (grid[row][15] == 0) sendByte(0, inverse); else sendByte(pgm_read_byte(&bitmaps[grid[row][15] - 1][incr + (8 - blockShiftR)]), inverse);
     for (byte col = 0; col < 15; col++) {
@@ -936,7 +936,7 @@ void drawGameScreen(byte mode) {
       }
     }
       for (byte incr = 0; incr < 7 - blockShiftR; incr++) if (grid[row][15] == 0) sendByte(0, inverse); else sendByte(pgm_read_byte(&bitmaps[grid[row][15] - 1][incr]), inverse);
-        oled.ssd1306_send_data_stop();
+    oled.ssd1306_send_data_stop();
 
   }
   if (frogColumn == 0) drawFrog(mode, 1);
@@ -982,7 +982,7 @@ void drawDocks(void) {
   byte drawPos = 3;
   for (byte incr = 0; incr < 5; incr++) {
     lcdDisplay_setpos(drawPos, 0);
-    
+
     oled.ssd1306_send_data_start();
     lcdDisplay_send_byte(B11111111);
     lcdDisplay_send_byte(B00000001);
