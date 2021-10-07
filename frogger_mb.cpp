@@ -304,12 +304,12 @@ void displayOpenScreen(int incr) {
 
   lcdDisplay_setpos(0, 0);
   for (int incr2 = 0; incr2 < 76; incr2++) {
-    //lcdDisplay_send_byte(B00111000);
+    lcdDisplay_send_byte(B00111000);
   }
 
   lcdDisplay_setpos(0, 2);
   for (int incr2 = 0; incr2 < 76; incr2++) {
-    //lcdDisplay_send_byte(B00011100);
+    lcdDisplay_send_byte(B00011100);
   }
 
   displayTitle();
@@ -471,10 +471,14 @@ void lcdDisplay_char_f6x8(uint8_t x, uint8_t y, const char ch[]) {
       y++;
     }
     lcdDisplay_setpos(x, y);
+      oled.ssd1306_send_data_start();
+
     for (i = 0; i < 6; i++)
     {
       lcdDisplay_send_byte(pgm_read_byte(&lcdDisplayxled_font6x8[c * 6 + i]));
     }
+      oled.ssd1306_send_data_stop();
+
     x += 6;
     j++;
   }
