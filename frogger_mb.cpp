@@ -869,6 +869,19 @@ void drawFrog(byte mode, bool frogDead) {
   }
 }
 
+
+// Send one block of 8 bytes to the screen - inverse means inverse video, for the river section
+void sendBlock2(byte fill, bool inverse) {
+  //oled.ssd1306_send_data_start();
+  for (int incr = 0; incr < 8; incr++) {
+    if (fill > 0) {
+      if (inverse == 0) lcdDisplay_send_byte(pgm_read_byte(&bitmaps[fill - 1][incr])); else lcdDisplay_send_byte(~pgm_read_byte(&bitmaps[fill - 1][incr]));
+    } else if (inverse == 0) lcdDisplay_send_byte(0); else lcdDisplay_send_byte(0xFF);
+  }
+  //oled.ssd1306_send_data_stop();
+}
+
+
 // Display the frog and all the moving items on the screen
 void drawGameScreen(byte mode) {
   bool inverse = 0;
@@ -876,7 +889,9 @@ void drawGameScreen(byte mode) {
   // Draw objects going left
   for (byte row = 0; row < 6; row += 2) {
     if (row >= 0 && row < 3) inverse = 1; else inverse = 0;                             // draw everything (except the frog) in inverse video on the river rows (0,1,2)
-    lcdDisplay_setpos(0, row + 1);                                                         // +1 because row 0 here is actually row 1 on the screen
+    lcdDisplay_setpos(0, row + 1); // +1 because row 0 here is actually row 1 on the screen
+      oled.ssd1306_send_data_start();
+
     for (byte incr = 0; incr < 7 - blockShiftL; incr++) if (grid[row][15] == 0) {       // cover the tiny bit to the far left of the screen up to wherever the main blocks will be drawn (depends on how far they are shifted)
         sendByte(0, inverse);                                                             // draw an empty 8-bit line if there's nothing wrapping around
       } else {
@@ -884,18 +899,19 @@ void drawGameScreen(byte mode) {
       }
     for (byte col = 0; col < 15; col++) {
       if (frogRow == row + 1 && frogColumn == col && frogRow < 4 && frogRow > 0) {
-        sendBlock(mode, 0);                                                                         // if we are in a location with the frog, and it's on the logs, draw it - never invert it (hence zero as second parameter here)
+        sendBlock2(mode, 0);                                                                         // if we are in a location with the frog, and it's on the logs, draw it - never invert it (hence zero as second parameter here)
       } else if (stopAnimate == 0 && frogRow == row + 1 && frogColumn == col + 1 && frogRow > 3 && frogRow < 7) {       // frog is amongst the cars and needs drawing
         for (byte incr = 0; incr < blockShiftL; incr++) sendByte(0, 0);                             // draw the blank space up to the frog
-        sendBlock(mode, 0);                                                                         // draw frog
+        sendBlock2(mode, 0);                                                                         // draw frog
         for (byte incr = 0; incr < 7 - blockShiftL; incr++) sendByte(0, 0);                         // draw the blank space after the frog
         col++;                                                                                      // we've now drawn two columns so increment
       } else {
-        sendBlock(grid[row][col], inverse);                                                         // draw the correct object for this space - it's not a frog ;)
+        sendBlock2(grid[row][col], inverse);                                                         // draw the correct object for this space - it's not a frog ;)
       }
     }
     // fill in the bit to the right of the main blocks
       for (byte incr = 0; incr < blockShiftL; incr++) if (grid[row][15] == 0) sendByte(0, inverse); else sendByte(pgm_read_byte(&bitmaps[grid[row][15] - 1][incr]), inverse);
+  oled.ssd1306_send_data_stop();
 
   }
   if (frogColumn == 0) drawFrog(mode, 1); // this covers the exceptional case where the frog is in the far left colum, in which case the normal routine can't draw it when it's on the road
@@ -904,20 +920,24 @@ void drawGameScreen(byte mode) {
   for (byte row = 1; row < 6; row += 2) {
     if (row > 0 && row < 3) inverse = 1; else inverse = 0;
     lcdDisplay_setpos(0, row + 1);
+      oled.ssd1306_send_data_start();
+
       for (byte incr = 0; incr < blockShiftR; incr++) if (grid[row][15] == 0) sendByte(0, inverse); else sendByte(pgm_read_byte(&bitmaps[grid[row][15] - 1][incr + (8 - blockShiftR)]), inverse);
     for (byte col = 0; col < 15; col++) {
       if (frogRow == row + 1 && frogColumn == col && frogRow < 4 && frogRow > 0) {
-        sendBlock(mode, 0);
+        sendBlock2(mode, 0);
       } else if (stopAnimate == 0 && frogRow == row + 1 && frogColumn == col + 1 && frogRow > 3 && frogRow < 7) {
         for (byte incr = 0; incr < 7 - blockShiftR; incr++) sendByte(0, 0);
-        sendBlock(mode, 0); // draw frog
+        sendBlock2(mode, 0); // draw frog
         for (byte incr = 0; incr < blockShiftR; incr++) sendByte(0, 0);
         col++;
       } else {
-        sendBlock(grid[row][col], inverse);
+        sendBlock2(grid[row][col], inverse);
       }
     }
       for (byte incr = 0; incr < 7 - blockShiftR; incr++) if (grid[row][15] == 0) sendByte(0, inverse); else sendByte(pgm_read_byte(&bitmaps[grid[row][15] - 1][incr]), inverse);
+        oled.ssd1306_send_data_stop();
+
   }
   if (frogColumn == 0) drawFrog(mode, 1);
 }
