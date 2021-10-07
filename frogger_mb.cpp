@@ -231,7 +231,7 @@ void beep(int, int);
 Beeper<10> beeper;
 SSD1306Device oled;
 
-class GB {
+struct GB {
   public:
     void begin() {}
     bool update() {
@@ -269,10 +269,12 @@ void displayTitle(void) {
   int incr = 0;
   for (int lxn = 0; lxn < 5; lxn++) {
     lcdDisplay_setpos(84, lxn);
+    oled.ssd1306_send_data_start();
     for (int lxn2 = 0; lxn2 < 40; lxn2++) {
       lcdDisplay_send_byte(pgm_read_byte(&titleBmp[incr]));
       incr++;
     }
+        oled.ssd1306_send_data_stop();
   }
 }
 
@@ -295,7 +297,7 @@ void setup() {
 }
 
 void displayOpenScreen(int incr) {
-  lcdDisplay_fillscreen(1);
+  lcdDisplay_fillscreen(0);
   if (incr < 99) screenLeft = incr;
 
   lcdDisplay_char_f6x8(0, 1, "F R O G G E R");
@@ -321,7 +323,7 @@ void loop() {
   using control::BTN_B;
 
 
-  lcdDisplay_fillscreen(1);
+  lcdDisplay_fillscreen(0);
   int sChange = 0;
 
   screenLeft = 0;
@@ -340,7 +342,7 @@ void loop() {
 
   if (sChange == 0) {
 
-    lcdDisplay_fillscreen(1);
+    lcdDisplay_fillscreen(0);
 
     playFrogger();
 
@@ -384,7 +386,7 @@ void loop() {
     delay(2500);
   }
 
-  lcdDisplay_fillscreen(1);
+  lcdDisplay_fillscreen(0);
   gb.display.update();
 
   while (gb.buttons.pressed(BTN_A) == true) {
@@ -402,8 +404,10 @@ void loop() {
     if (incr == 0) delay(1700);
   }
 
-  while (gb.buttons.pressed(BTN_A) == false && gb.buttons.pressed(BTN_B) == false ) {
     displayOpenScreen(100);
+
+  while (gb.buttons.pressed(BTN_A) == false && gb.buttons.pressed(BTN_B) == false ) {
+    //displayOpenScreen(100);
     while (!gb.update());
   }
 
@@ -534,13 +538,13 @@ void playFrogger() {
     drawGameScreen(frogMode);
     drawDocks();
 
-
+#if 0
     if (frogColumn * 8 < screenLeft + 40) screenLeft--;
     if (frogColumn * 8 > screenLeft + 50) screenLeft++;
     if (frogColumn * 8 < screenLeft + 15) screenLeft--;
     if (frogColumn * 8 > screenLeft + 60) screenLeft++;
 
-    /*
+    #else
       if (frogRow == 1 || frogRow == 3) {
       screenLeft = frogColumn*8 - 30 - blockShiftL;
       } else if (frogRow == 2) {
@@ -548,7 +552,7 @@ void playFrogger() {
       } else {
       screenLeft = frogColumn*8 - 30;
       }
-    */
+  #endif  
 
     screenTop =  frogRow - 3;
 
