@@ -691,7 +691,7 @@ void playFrogger() {
         resetDock(0);                        // reinitliase the dock
         dockedFrogs = 0;
         drawDocks();                         // display the (now empty) docks
-        //drawLives();                         // display the lives
+        drawLives();                         // display the lives
         doNumber(0, 7, score);               // display the score
       }
     }
