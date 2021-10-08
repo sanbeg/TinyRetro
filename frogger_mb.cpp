@@ -39,8 +39,11 @@
 #include "Beeper.h"
 #include "Control.h"
 
+#include "Gamebuino.h"
 
 namespace frogger_mb {
+//creates a Gamebuino object named gb
+Gamebuino gb;
 
 // Uncomment this #define to make the logs smaller (/thinner)
 //#define SMALLLOGS
@@ -175,7 +178,7 @@ static const byte titleBmp[] PROGMEM = {
   0x03, 0x03, 0x06, 0x06, 0x0F, 0x0F, 0x06, 0x00
 };
 
-
+#if 0
 // Opening artwork created by @senkunmusahi using https://www.riyas.org/2013/12/online-led-matrix-font-generator-with.html
 const byte PROGMEM openScreen[] = {
   57, 35,
@@ -215,6 +218,8 @@ const byte PROGMEM openScreen[] = {
   0x00, 0x00, 0x00, 0xf0, 0xc9, 0x02, 0x00, 0x00,
   0x00, 0x00, 0x00, 0x01, 0xcd, 0x80, 0x00, 0x00
 };
+#endif
+
 
 // Display functions - a legacy from the AttinyArcade version - could be replaced with GameBuino function calls if you wish
 void lcdDisplay_send_byte(uint8_t byte);
@@ -230,32 +235,6 @@ void beep(int, int);
 
 Beeper<10> beeper;
 SSD1306Device oled;
-
-struct GB {
-  public:
-    void begin() {}
-    bool update() {
-      return true;
-    }
-    void titleScreen(uint8_t * bytes) {
-      // TODO - implement something here
-    }
-
-    struct {
-      bool pressed(uint8_t btn) {
-        return control::isPressed(btn); // should be consume?
-      }
-    } buttons;
-
-    struct {
-      void update() {}
-    } display;
-
-
-    struct {
-      void playNote(int x, int y, int z) {}
-    } sound;
-} gb;
 
 void showScore(); // defined below, just missing proto
 void drawFrog(byte mode, bool frogDead);
@@ -293,7 +272,7 @@ void setup() {
   gb.begin();
   //display the main menu:
   //gb.titleScreen(F("FROGGER"),openScreen);
-  gb.titleScreen(openScreen);
+  //gb.titleScreen(openScreen);
 }
 
 void displayOpenScreen(int incr) {
@@ -532,13 +511,13 @@ void playFrogger() {
 
   while (!gb.update());
   while (lives >= 0) {
-    drawFrog(frogMode, 0);
-    drawLives();
-    doNumber(0, 7, score);
+    //drawFrog(frogMode, 0);
+    //drawLives();
+    //doNumber(0, 7, score);
     drawGameScreen(frogMode);
-    drawDocks();
+    //drawDocks();
 
-#if 0
+#if 1
     if (frogColumn * 8 < screenLeft + 40) screenLeft--;
     if (frogColumn * 8 > screenLeft + 50) screenLeft++;
     if (frogColumn * 8 < screenLeft + 15) screenLeft--;
@@ -564,7 +543,7 @@ void playFrogger() {
     while (!gb.update());
     interimStep++;
 
-    if (watchDog >= 500) lives = -1; // Stop the game if nothing's happening - maybe triggered in someone's pocket so this is to save battery!
+    if (watchDog >= 5000) lives = -1; // Stop the game if nothing's happening - maybe triggered in someone's pocket so this is to save battery!
 
     // Calculate left limit of frog movement so it doesn't hit the score
     frogLeftLimit = 1;
@@ -690,8 +669,8 @@ void playFrogger() {
           frogRow = 7;                                        // reposition the frog at the start
           frogColumn = 8;
           drawFrog(frogMode, 0);
-          drawLives();
-          doNumber(0, 7, score);
+          //drawLives();
+          //doNumber(0, 7, score);
           drawGameScreen(frogMode);
           drawDocks();
           while (!gb.update());
@@ -712,7 +691,7 @@ void playFrogger() {
         resetDock(0);                        // reinitliase the dock
         dockedFrogs = 0;
         drawDocks();                         // display the (now empty) docks
-        drawLives();                         // display the lives
+        //drawLives();                         // display the lives
         doNumber(0, 7, score);               // display the score
       }
     }
@@ -774,12 +753,15 @@ void playFrogger() {
       drawLives();      // display number of lives left
       frogColumn = 8;   // reinitalise frog location
       frogRow = 7;
+
+      drawFrog(frogMode, 0); // since we don't draw every frame, need to redraw after death.
       while (!gb.update());
     }
   }  // Big while loop (main game loop) goes until lives is negative
 }
 
 void checkCollision(void) {
+  //return; // immortal frog for testing, but still dies if it hits the edge....
   if (frogRow > 0 && frogRow < 4 && grid[frogRow - 1][frogColumn] == 0) stopAnimate = 1; // the frog has fallen in the river
   if (frogRow > 0 && frogRow < 4 && grid[frogRow - 1][frogColumn] > 9) stopAnimate = 1; // the frog has stepped on a croc
   if ((frogRow < 7 && frogRow > 3) && (grid[frogRow - 1][frogColumn] != 0 || grid[frogRow - 1][frogColumn - 1] != 0)) stopAnimate = 1; // the frog has been hit by a vehicle
@@ -892,8 +874,9 @@ void drawGameScreen(byte mode) {
     lcdDisplay_setpos(0, row + 1); // +1 because row 0 here is actually row 1 on the screen
     oled.ssd1306_send_data_start();
 
-    for (byte incr = 0; incr < 7 - blockShiftL; incr++) if (grid[row][15] == 0) {       // cover the tiny bit to the far left of the screen up to wherever the main blocks will be drawn (depends on how far they are shifted)
-        sendByte(0, inverse);                                                             // draw an empty 8-bit line if there's nothing wrapping around
+    for (byte incr = 0; incr < 7 - blockShiftL; incr++)
+      if (grid[row][15] == 0) {
+        sendByte(0, inverse); // cover the tiny bit to the far left of the screen up to wherever the main blocks will be drawn (depends on how far they are shifted)                                                            // draw an empty 8-bit line if there's nothing wrapping around
       } else {
         sendByte(pgm_read_byte(&bitmaps[grid[row][15] - 1][1 + blockShiftL + incr]), inverse); // pick the correct bit of whatever is wrapping from the right of the screen
       }
@@ -910,7 +893,14 @@ void drawGameScreen(byte mode) {
       }
     }
     // fill in the bit to the right of the main blocks
-      for (byte incr = 0; incr < blockShiftL; incr++) if (grid[row][15] == 0) sendByte(0, inverse); else sendByte(pgm_read_byte(&bitmaps[grid[row][15] - 1][incr]), inverse);
+    for (byte incr = 0; incr < blockShiftL; incr++)
+      if (grid[row][15] == 0)
+        sendByte(0, inverse);
+      else
+        sendByte(pgm_read_byte(&bitmaps[grid[row][15] - 1][incr]), inverse);
+
+    //sendByte(0xff, inverse); // there seems to be room for 1 more.
+        
     oled.ssd1306_send_data_stop();
 
   }
@@ -919,23 +909,35 @@ void drawGameScreen(byte mode) {
   // Draw objects going right - see comments above, works in basically the same way
   for (byte row = 1; row < 6; row += 2) {
     if (row > 0 && row < 3) inverse = 1; else inverse = 0;
+    //inverse = (row > 0 && row < 3);
     lcdDisplay_setpos(0, row + 1);
     oled.ssd1306_send_data_start();
 
-      for (byte incr = 0; incr < blockShiftR; incr++) if (grid[row][15] == 0) sendByte(0, inverse); else sendByte(pgm_read_byte(&bitmaps[grid[row][15] - 1][incr + (8 - blockShiftR)]), inverse);
+    for (byte incr = 0; incr < blockShiftR; incr++)
+      if (grid[row][15] == 0)
+        sendByte(0, inverse);
+      else
+        sendByte(pgm_read_byte(&bitmaps[grid[row][15] - 1][incr + (8 - blockShiftR)]), inverse);
+
     for (byte col = 0; col < 15; col++) {
       if (frogRow == row + 1 && frogColumn == col && frogRow < 4 && frogRow > 0) {
         sendBlock2(mode, 0);
       } else if (stopAnimate == 0 && frogRow == row + 1 && frogColumn == col + 1 && frogRow > 3 && frogRow < 7) {
-        for (byte incr = 0; incr < 7 - blockShiftR; incr++) sendByte(0, 0);
+        for (byte incr = 0; incr < 7 - blockShiftR; incr++)
+          sendByte(0, 0);
         sendBlock2(mode, 0); // draw frog
-        for (byte incr = 0; incr < blockShiftR; incr++) sendByte(0, 0);
+        for (byte incr = 0; incr < blockShiftR; incr++)
+          sendByte(0, 0);
         col++;
       } else {
         sendBlock2(grid[row][col], inverse);
       }
     }
-      for (byte incr = 0; incr < 7 - blockShiftR; incr++) if (grid[row][15] == 0) sendByte(0, inverse); else sendByte(pgm_read_byte(&bitmaps[grid[row][15] - 1][incr]), inverse);
+    for (byte incr = 0; incr < 7 - blockShiftR; incr++)
+      if (grid[row][15] == 0)
+        sendByte(0, inverse);
+      else
+        sendByte(pgm_read_byte(&bitmaps[grid[row][15] - 1][incr]), inverse);
     oled.ssd1306_send_data_stop();
 
   }
@@ -944,17 +946,22 @@ void drawGameScreen(byte mode) {
 
 // Send one byte to the screen
 void sendByte(byte fill, bool inverse) {
-  if (inverse == 0) lcdDisplay_send_byte(fill); else lcdDisplay_send_byte(~fill);
+  //if (inverse == 0) lcdDisplay_send_byte(fill); else lcdDisplay_send_byte(~fill);
+  lcdDisplay_send_byte(inverse ? ~fill : fill);
 }
 
 // Send one block of 8 bytes to the screen - inverse means inverse video, for the river section
 void sendBlock(byte fill, bool inverse) {
   oled.ssd1306_send_data_start();
+#if 0
   for (int incr = 0; incr < 8; incr++) {
     if (fill > 0) {
       if (inverse == 0) lcdDisplay_send_byte(pgm_read_byte(&bitmaps[fill - 1][incr])); else lcdDisplay_send_byte(~pgm_read_byte(&bitmaps[fill - 1][incr]));
     } else if (inverse == 0) lcdDisplay_send_byte(0); else lcdDisplay_send_byte(0xFF);
   }
+#else
+  sendBlock2(fill, inverse);
+#endif
   oled.ssd1306_send_data_stop();
 }
 
@@ -987,18 +994,18 @@ void drawDocks(void) {
     lcdDisplay_send_byte(B11111111);
     lcdDisplay_send_byte(B00000001);
     lcdDisplay_send_byte(B00000001);
-    oled.ssd1306_send_data_stop();
+    //oled.ssd1306_send_data_stop();
 
     if (frogDocks[incr] == 1) {
-      sendBlock(1, 0);
+      sendBlock2(1, 0);
     } else {
-      oled.ssd1306_send_data_start();
+      //oled.ssd1306_send_data_start();
       for (byte lxn = 0; lxn < 8; lxn++)
         lcdDisplay_send_byte(B00000001);
-      oled.ssd1306_send_data_stop();
+      //oled.ssd1306_send_data_stop();
     }
 
-    oled.ssd1306_send_data_start();
+    //oled.ssd1306_send_data_start();
     lcdDisplay_send_byte(B00000001);
     lcdDisplay_send_byte(B00000001);
     lcdDisplay_send_byte(B11111111);
@@ -1038,7 +1045,7 @@ void levelUp(int number) {
   }
   delay(500);
   lcdDisplay_fillscreen(0x00);
-  lcdDisplay_char_f6x8(14, 1,  "---------");
+  lcdDisplay_char_f6x8(14, 1, "---------");
   lcdDisplay_char_f6x8(14, 2, "  LEVEL  ");
   lcdDisplay_char_f6x8(14, 4, "---------");
   doNumber(32, 3, level);
