@@ -226,6 +226,7 @@ void lcdDisplay_send_byte(uint8_t byte);
 void lcdDisplay_setpos(uint8_t x, uint8_t y);
 void lcdDisplay_fillscreen(uint8_t fill_Data);
 void lcdDisplay_char_f6x8(uint8_t x, uint8_t y, const char ch[]);
+void lcdDisplay_char_f6x8_inv(const char ch);
 
 // Other generic functions for games (both originated in code from webboggles.com)
 void doNumber (int, int, int);
@@ -281,17 +282,30 @@ void displayOpenScreen(int incr) {
 
   lcdDisplay_char_f6x8(0, 1, "F R O G G E R");
   lcdDisplay_char_f6x8(0, 3, "andy jackson");
-  lcdDisplay_char_f6x8(64, 5, "Press A...");
+  //lcdDisplay_char_f6x8(64, 6, "Press A...");
+
+  lcdDisplay_char_f6x8(128 - 7 * 6 - 1, 6, "Press ");
+  //lcdDisplay_char_f6x8(64 + 6*6, 6, "A");
+  lcdDisplay_char_f6x8_inv('A');
+
+
 
   lcdDisplay_setpos(0, 0);
-  for (int incr2 = 0; incr2 < 76; incr2++) {
+  oled.ssd1306_send_data_start();
+  for (int incr2 = 0; incr2 < 78; incr2++) {
     lcdDisplay_send_byte(B00111000);
   }
+  oled.ssd1306_send_data_stop();
+
 
   lcdDisplay_setpos(0, 2);
-  for (int incr2 = 0; incr2 < 76; incr2++) {
+  oled.ssd1306_send_data_start();
+
+  for (int incr2 = 0; incr2 < 78; incr2++) {
     lcdDisplay_send_byte(B00011100);
   }
+  oled.ssd1306_send_data_stop();
+
 
   displayTitle();
 }
@@ -300,6 +314,9 @@ void displayOpenScreen(int incr) {
 void loop() {
   using control::BTN_A;
   using control::BTN_B;
+
+  displayOpenScreen(100);
+  while (gb.buttons.pressed(BTN_A) == false && gb.buttons.pressed(BTN_B) == false );
 
 
   lcdDisplay_fillscreen(0);
@@ -383,7 +400,7 @@ void loop() {
     if (incr == 0) delay(1700);
   }
 
-  displayOpenScreen(100);
+  //displayOpenScreen(100);
 
   while (gb.buttons.pressed(BTN_A) == false && gb.buttons.pressed(BTN_B) == false ) {
     //displayOpenScreen(100);
@@ -465,6 +482,22 @@ void lcdDisplay_char_f6x8(uint8_t x, uint8_t y, const char ch[]) {
     x += 6;
     j++;
   }
+}
+
+void lcdDisplay_char_f6x8_inv(const char ch) {
+    uint8_t c = ch - 32;
+    if (c > 0) c = c - 12;
+    if (c > 15) c = c - 6;
+    if (c > 40) c = c - 9;
+
+    oled.ssd1306_send_data_start();
+
+    for (byte i = 0; i < 6; i++)
+    {
+      lcdDisplay_send_byte(~pgm_read_byte(&lcdDisplayxled_font6x8[c * 6 + i]));
+    }
+    lcdDisplay_send_byte(0xFF);
+    oled.ssd1306_send_data_stop();
 }
 
 /* ------------------------
@@ -900,7 +933,7 @@ void drawGameScreen(byte mode) {
         sendByte(pgm_read_byte(&bitmaps[grid[row][15] - 1][incr]), inverse);
 
     //sendByte(0xff, inverse); // there seems to be room for 1 more.
-        
+
     oled.ssd1306_send_data_stop();
 
   }
