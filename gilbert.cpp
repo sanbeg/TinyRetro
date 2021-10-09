@@ -19,6 +19,7 @@
 //the code work at 16 MHZ internal
 //and use ssd1306xled Library for SSD1306 oled display 128x64
 #include "ssd1306xled.h"
+#include "Beeper.h"
 #include "Control.h"
 
 namespace gilbert {
@@ -47,6 +48,8 @@ bool visible = 1; // 0 - 1
 uint8_t injur = 0; // health -> 0 -30
 uint8_t LIVE = 0; // lives -> 0 - 7
 
+Beeper<10> beeper;
+
 float vslide(int n) {
   return (float) (1 << n);
 }
@@ -57,6 +60,7 @@ void setup() {
   //_delay_ms(40);
   DDRB = DDRB | 0b00010000;
   control::setup();
+  beeper.setup();
 }
 
 uint8_t delKey(uint8_t Xin, uint8_t Yin) {
@@ -72,6 +76,7 @@ uint8_t delKey(uint8_t Xin, uint8_t Yin) {
 }
 
 void Sound(uint8_t freq, uint8_t dur) {
+#if 0
   for (uint8_t t = 0; t < dur; t++) {
     if (freq != 0) PORTB = PORTB | 0b00010000;
     for (uint8_t t = 0; t < (255 - freq); t++) {
@@ -82,6 +87,9 @@ void Sound(uint8_t freq, uint8_t dur) {
       _delay_us(1);
     }
   }
+#else
+  beeper.beep(freq, dur);
+#endif
 }
 
 
@@ -550,7 +558,7 @@ void Tiny_Flip(DriftSprite* DSprite) {
       SSD1306.ssd1306_send_byte(0x00);
     }
   }
-  if ((pgm_read_byte(&KeyinLevel[levelType]) == keyS) && (/*timer <= 30*/ (timer/8)%2 )) {
+  if ((pgm_read_byte(&KeyinLevel[levelType]) == keyS) && (/*timer <= 30*/ (timer / 8) % 2 )) {
     for (x = 0; x < 4; x++) {
       SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite12[x]));
     }
@@ -689,7 +697,7 @@ void Tiny_Flip(DriftSprite* DSprite) {
             sprite = sprite16;
             break;
           case 11:
-            sprite = (timer > MAX_TIMER/2) ? sprite11 : sprite12;
+            sprite = (timer > MAX_TIMER / 2) ? sprite11 : sprite12;
             break;
           case 13:
             sprite = sprite13;

@@ -264,8 +264,8 @@ void beep(int bCount, int bDelay) {
 
 // Arduino stuff - setup
 void setup() {
-
   control::setup();
+  beeper.setup();
   oled.ssd1306_init();
   oled.ssd1306_fillscreen(0x00);
 
@@ -284,11 +284,9 @@ void displayOpenScreen(int incr) {
   lcdDisplay_char_f6x8(0, 3, "andy jackson");
   //lcdDisplay_char_f6x8(64, 6, "Press A...");
 
-  lcdDisplay_char_f6x8(128 - 7 * 6 - 1, 6, "Press ");
+  lcdDisplay_char_f6x8(128 - 7 * 6 - 1, 6, "Press "); //offset for 7 6 pixel chars + 1 extra pixel
   //lcdDisplay_char_f6x8(64 + 6*6, 6, "A");
   lcdDisplay_char_f6x8_inv('A');
-
-
 
   lcdDisplay_setpos(0, 0);
   oled.ssd1306_send_data_start();
@@ -316,7 +314,13 @@ void loop() {
   using control::BTN_B;
 
   displayOpenScreen(100);
-  while (gb.buttons.pressed(BTN_A) == false && gb.buttons.pressed(BTN_B) == false );
+  while (gb.buttons.pressed(BTN_A) == false && gb.buttons.pressed(BTN_B) == false ){
+/*
+    for (byte i=0; i<128; ++i) {
+      displayOpenScreen(i);
+    }
+    */
+  }
 
 
   lcdDisplay_fillscreen(0);
@@ -381,32 +385,6 @@ void loop() {
     while (!gb.update());
     delay(2500);
   }
-
-  lcdDisplay_fillscreen(0);
-  gb.display.update();
-
-  while (gb.buttons.pressed(BTN_A) == true) {
-    while (!gb.update());
-    delay(5);
-  }
-
-  gb.sound.playNote(63, 1, 0);
-  while (!gb.update());
-
-  screenLeft = 0;
-  for (int incr = 0; incr < 46 ; incr += 3) {
-    displayOpenScreen(incr);
-    gb.display.update();
-    if (incr == 0) delay(1700);
-  }
-
-  //displayOpenScreen(100);
-
-  while (gb.buttons.pressed(BTN_A) == false && gb.buttons.pressed(BTN_B) == false ) {
-    //displayOpenScreen(100);
-    while (!gb.update());
-  }
-
 }
 
 void doNumber (int x, int y, int value) {
