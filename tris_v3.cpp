@@ -26,6 +26,60 @@
 #include "ssd1306xled.h"
 #include "spritebank_TTRIS.h"
 
+namespace ttris {
+/** prototypes **/
+uint8_t CHANGE_GRID_STAT_TTRIS (int8_t, int8_t, uint8_t);
+uint8_t CHECK_if_Rot_Ok_TTRIS (uint8_t *);
+void CONTROLE_TTRIS (uint8_t *);
+uint8_t Calcul_of_Score_TTRIS (uint8_t);
+void Check_NEW_RECORD (void);
+uint8_t Check_collision_x_TTRIS (int8_t);
+uint8_t Check_collision_y_TTRIS (int8_t);
+void Clean_Grid_TTRIS (uint8_t *);
+void Convert_Nb_of_line_TTRIS (void);
+void DELETE_LINE_TTRIS (void);
+uint8_t DropPiece_TTRIS (uint8_t, uint8_t);
+void END_DROP_TTRIS (void);
+uint8_t End_Play_TTRIS (void);
+void FLASH_LINE_TTRIS (uint8_t *);
+void Flip_intro_TTRIS (uint8_t *);
+uint8_t GRID_STAT_TTRIS (int8_t, int8_t);
+void Game_Play_TTRIS (void);
+uint8_t H_grid_Scan_TTRIS (uint8_t);
+void INIT_ALL_VAR_TTRIS (void);
+void INTRO_MANIFEST_TTRIS (void);
+void Move_Piece_TTRIS (void);
+uint8_t NEXT_BLOCK_TTRIS (uint8_t, uint8_t);
+void Ou_suis_Je_TTRIS (int8_t, int8_t);
+void PAINT_LINE_TTRIS (uint8_t, uint8_t *);
+uint8_t PSEUDO_RND_TTRIS (void);
+uint8_t RECUPE_BACKGROUND_TTRIS (uint8_t, uint8_t);
+uint8_t RecupeDecalageY_TTRIS (uint8_t);
+uint8_t RecupeLineY_TTRIS (uint8_t);
+uint8_t Recupe_Start_TTRIS (uint8_t, uint8_t, uint8_t *);
+uint8_t Recupe_TTRIS (uint8_t, uint8_t);
+void Reset_Value_TTRIS (void);
+void SETUP_NEW_PREVIEW_PIECE_TTRIS (uint8_t *);
+void SND_TTRIS (uint8_t);
+uint8_t Scan_Piece_Matrix_TTRIS (int8_t, int8_t);
+void Select_Piece_TTRIS (uint8_t);
+void Sound_TTRIS (uint8_t, uint8_t);
+uint8_t SplitSpriteDecalageY_TTRIS (uint8_t, uint8_t, uint8_t);
+void Tiny_Flip_TTRIS (uint8_t);
+uint8_t blitzSprite_TTRIS (int8_t, int8_t, uint8_t, uint8_t, uint8_t, const);
+uint8_t checksum (uint8_t);
+uint8_t intro_TTRIS (uint8_t, uint8_t, uint8_t *);
+uint8_t recupe_Chateau_TTRIS (uint8_t, uint8_t);
+void recupe_HIGHSCORE_TTRIS (void);
+uint8_t recupe_LEVEL_TTRIS (uint8_t, uint8_t);
+uint8_t recupe_Nb_of_line_TTRIS (uint8_t, uint8_t);
+uint8_t recupe_SCORES_TTRIS (uint8_t, uint8_t);
+void reset_Score_TTRIS (void);
+void rotate_Matrix_TTRIS (uint8_t);
+void save_HIGHSCORE_TTRIS (void);
+/*******/
+
+
 void setup() {
   SSD1306.ssd1306_init();
   pinMode(1, INPUT);
@@ -929,4 +983,6 @@ void Sound_TTRIS(uint8_t freq_, uint8_t dur) {
       _delay_us(1);
     }
   }
+}
+
 }
