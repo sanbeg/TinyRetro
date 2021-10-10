@@ -25,6 +25,7 @@
 #include<EEPROM.h>
 #include "ssd1306xled.h"
 #include "Control.h"
+#include "Beeper.h"
 #include "spritebank_TTRIS.h"
 
 namespace ttris {
@@ -80,10 +81,12 @@ void rotate_Matrix_TTRIS (uint8_t);
 void save_HIGHSCORE_TTRIS (void);
 /*******/
 
+Beeper <> beeper;
 
 void setup() {
   SSD1306.ssd1306_init();
   control::setup();
+  beeper.setup();
 }
 
 ////////////////////////////////// main  ////////////////////////////////////
@@ -971,6 +974,7 @@ uint8_t checksum(uint8_t Byte_) {
 }
 
 void Sound_TTRIS(uint8_t freq_, uint8_t dur) {
+#if 0
   for (uint8_t t = 0; t < dur; t++) {
     digitalWrite(4, HIGH);
     for (uint8_t t = 0; t < (255 - freq_); t++) {
@@ -981,6 +985,9 @@ void Sound_TTRIS(uint8_t freq_, uint8_t dur) {
       _delay_us(1);
     }
   }
+#else
+  beeper.beep(freq_, dur);
+#endif
 }
 
 }
