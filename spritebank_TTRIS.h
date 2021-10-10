@@ -24,12 +24,12 @@
 
 #include <avr/pgmspace.h>
 
-#define TINYJOYPAD_LEFT  (analogRead(A0)>=750)&&(analogRead(A0)<950)
-#define TINYJOYPAD_RIGHT (analogRead(A0)>500)&&(analogRead(A0)<750)
-#define TINYJOYPAD_DOWN (analogRead(A3)>=750)&&(analogRead(A3)<950)
-#define TINYJOYPAD_UP  (analogRead(A3)>500)&&(analogRead(A3)<750)
-#define BUTTON_DOWN (digitalRead(1)==0)
-#define BUTTON_UP (digitalRead(1)==1)
+#define TINYJOYPAD_LEFT  control::isPressed(control::BTN_L)
+#define TINYJOYPAD_RIGHT control::isPressed(control::BTN_R)
+#define TINYJOYPAD_DOWN control::isPressed(control::BTN_D)
+#define TINYJOYPAD_UP  control::isPressed(control::BTN_U)
+#define BUTTON_DOWN control::isPressed(control::BTN_A)
+#define BUTTON_UP !control::isPressed(control::BTN_A)
 
 //public var
 uint8_t Grid_TTRIS[12][3]={{0}};

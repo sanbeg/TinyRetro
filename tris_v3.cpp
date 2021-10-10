@@ -24,6 +24,7 @@
 
 #include<EEPROM.h>
 #include "ssd1306xled.h"
+#include "Control.h"
 #include "spritebank_TTRIS.h"
 
 namespace ttris {
@@ -82,10 +83,7 @@ void save_HIGHSCORE_TTRIS (void);
 
 void setup() {
   SSD1306.ssd1306_init();
-  pinMode(1, INPUT);
-  pinMode(4, OUTPUT);
-  pinMode(A0, INPUT);
-  pinMode(A3, INPUT);
+  control::setup();
 }
 
 ////////////////////////////////// main  ////////////////////////////////////
