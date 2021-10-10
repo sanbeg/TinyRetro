@@ -87,7 +87,7 @@ int score = 0; // score - this affects the difficulty of the game
 int top = 0;
 
 
-Beeper<10> beeper;
+Beeper<> beeper;
 SSD1306Device oled;
 
 // attiny arcade compability functions

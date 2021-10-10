@@ -48,7 +48,7 @@ bool visible = 1; // 0 - 1
 uint8_t injur = 0; // health -> 0 -30
 uint8_t LIVE = 0; // lives -> 0 - 7
 
-Beeper<10> beeper;
+Beeper<> beeper;
 
 float vslide(int n) {
   return (float) (1 << n);
@@ -569,6 +569,8 @@ void Tiny_Flip(DriftSprite* DSprite) {
       }
     }
   }
+  SSD1306.ssd1306_send_data_stop();
+
   for (m = 1; m < 8; m++)
   {
     SSD1306.ssd1306_send_command(0xb0 + m);

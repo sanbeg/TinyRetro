@@ -98,7 +98,7 @@ boolean newHigh;          // Is there a new high score?
 byte grid[6][16];         // Grid for items like logs, crocs, cars and lorries
 byte frogMode;            // Represents the frog direction
 
-Beeper<10> beeper;
+Beeper<> beeper;
 SSD1306Device oled;
 
 // Bitmaps created by @senkunmusahi using https://www.riyas.org/2013/12/online-led-matrix-font-generator-with.html

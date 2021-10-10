@@ -234,7 +234,7 @@ void beep(int, int);
 
 /** TinyRetro - Steve Sanbeg **/
 
-Beeper<10> beeper;
+Beeper<> beeper;
 SSD1306Device oled;
 
 void showScore(); // defined below, just missing proto
