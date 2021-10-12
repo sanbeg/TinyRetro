@@ -58,7 +58,6 @@ void setup() {
   //_delay_ms(40);
   SSD1306.ssd1306_init();
   //_delay_ms(40);
-  DDRB = DDRB | 0b00010000;
   control::setup();
   beeper.setup();
 }
@@ -544,20 +543,26 @@ void Tiny_Flip(DriftSprite* DSprite) {
   SSD1306.ssd1306_send_command(0xb0 + 0); // page0 - page1
   SSD1306.ssd1306_send_command(0x00);   // low column start address
   SSD1306.ssd1306_send_command(0x10);   // high column start address
+#if 1 // try skipping all of top, see if that helps locking
   SSD1306.ssd1306_send_data_start();
   for (x = 0; x < LIVE - 1; x++) {
+    // draw extra lives
     for (t = 0; t < 4; t++) {
-      SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite26[t]));
+      SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite26[t])); // back
     }
     for (t = 0; t < 4; t++) {
-      SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite27[t]));
+      SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite27[t])); // front
     }
   }
   for (x = 0; x < 11 + (3 - (LIVE - 1)); x++) {
     for (t = 0; t < 8; t++) {
-      SSD1306.ssd1306_send_byte(0x00);
+      SSD1306.ssd1306_send_byte(0x00); // put a bunch of spaces between lives & key.
     }
   }
+    SSD1306.ssd1306_send_data_stop();
+
+
+    SSD1306.ssd1306_send_data_start();
   if ((pgm_read_byte(&KeyinLevel[levelType]) == keyS) && (/*timer <= 30*/ (timer / 8) % 2 )) {
     for (x = 0; x < 4; x++) {
       SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite12[x]));
@@ -565,12 +570,12 @@ void Tiny_Flip(DriftSprite* DSprite) {
   } else {
     for (x = 0; x < 4; x++) {
       for (t = 0; t < 4; t++) {
-        SSD1306.ssd1306_send_byte(0x00);
+        SSD1306.ssd1306_send_byte(0x00); //blank key for blink effect.
       }
     }
   }
   SSD1306.ssd1306_send_data_stop();
-
+#endif
   for (m = 1; m < 8; m++)
   {
     SSD1306.ssd1306_send_command(0xb0 + m);
@@ -587,6 +592,7 @@ void Tiny_Flip(DriftSprite* DSprite) {
       if ((Map[m][n] == 7) && (while1 != 0)) {
         for (t = Start; t < 4; t++) {
           SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite7[t]));
+
           PrecessQuit
         } Start = 0;
         // main sprite
@@ -625,7 +631,7 @@ void Tiny_Flip(DriftSprite* DSprite) {
           }
         }
         for (t = 0; t < 4; t++) {
-          SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t])*VSlideOut);
+          SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t])*VSlideOut); // draw left half of char
           PrecessQuit
         } Start = 0;
 
@@ -666,7 +672,7 @@ void Tiny_Flip(DriftSprite* DSprite) {
 
         if (sprite) {
           for (t = 0; t < 4; t++) {
-            SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t])*VSlideOut);
+            SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t])*VSlideOut); //right side of char
             PrecessQuit
             Start = DSprite->x4decalage;
           }
@@ -718,7 +724,8 @@ void Tiny_Flip(DriftSprite* DSprite) {
         }
         if (sprite) {
           for (t = Start; t < 4; t++) {
-            SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t]));
+            //if (control::isPressed(control::BTN_B))
+            SSD1306.ssd1306_send_byte(pgm_read_byte(&sprite[t])); //draw block
             PrecessQuit
           }
           Start = 0;

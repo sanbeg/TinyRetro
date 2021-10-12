@@ -24,12 +24,12 @@
 
 #include <avr/pgmspace.h>
 
-#define TINYJOYPAD_LEFT  control::isPressed(control::BTN_L)
-#define TINYJOYPAD_RIGHT control::isPressed(control::BTN_R)
-#define TINYJOYPAD_DOWN control::isPressed(control::BTN_D)
-#define TINYJOYPAD_UP  control::isPressed(control::BTN_U)
-#define BUTTON_DOWN control::isPressed(control::BTN_A)
-#define BUTTON_UP !control::isPressed(control::BTN_A)
+#define TINYJOYPAD_LEFT  isPressed(control::BTN_L)
+#define TINYJOYPAD_RIGHT isPressed(control::BTN_R)
+#define TINYJOYPAD_DOWN isPressed(control::BTN_D)
+#define TINYJOYPAD_UP  isPressed(control::BTN_U)
+#define BUTTON_DOWN isPressed(control::BTN_A)
+#define BUTTON_UP !isPressed(control::BTN_A)
 
 //public var
 uint8_t Grid_TTRIS[12][3]={{0}};

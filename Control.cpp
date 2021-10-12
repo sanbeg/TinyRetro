@@ -36,7 +36,7 @@ bool isPressed(int button) {
 }
 
 bool consumePress(int button) {
-  ATOMIC_BLOCK(ATOMIC_FORCEON) {
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
     bool rv = (pins & (1 << button)) == 0;
     pins |= (1 << button);
     return rv;
