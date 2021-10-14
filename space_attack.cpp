@@ -25,7 +25,7 @@
    http://www.re-innovation.co.uk/web12/index.php/en/blog-75/306-sleep-modes-on-attiny85
 */
 
-#include "ssd1306xled.h"
+#include "src/video/ssd1306xled.h"
 #include "oled_text.h"
 
 #include "attiny_sleep.h"

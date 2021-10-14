@@ -32,7 +32,7 @@
 #include <avr/pgmspace.h>
 // #include <avr/interrupt.h> // needed for the additional interrupt
 //#include "ssd1306.h"
-#include "ssd1306xled.h"
+#include "src/video/ssd1306xled.h"
 #include "oled_text.h"
 
 #include "attiny_sleep.h"

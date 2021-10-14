@@ -1,6 +1,6 @@
 
 #include<stdint.h>
-#include "ssd1306xled.h"
+#include "src/video/ssd1306xled.h"
 
 namespace oled_text {
 

@@ -18,7 +18,7 @@
 
 //the code work at 16 MHZ internal
 //and use ssd1306xled Library for SSD1306 oled display 128x64
-#include "ssd1306xled.h"
+#include "src/video/ssd1306xled.h"
 #include "Beeper.h"
 #include "Control.h"
 
