@@ -5,10 +5,10 @@
  * @author: Neven Boyanov
  *
  * Source code available at: https://bitbucket.org/tinusaur/ssd1306xled
- * 
+ *
  * Modified by Tejashwi Kalp Taru, with the help of TinyI2C (https://github.com/technoblogy/tiny-i2c/)
  * Modified code available at: https://github.com/tejashwikalptaru/ssd1306xled
- * 
+ *
  * Modified by Steve Sanbeg
  *
  */
@@ -17,8 +17,6 @@
 // #include <avr/pgmspace.h>
 // #include <avr/interrupt.h>
 #include <util/delay.h>
-
-#include "TinyI2CMaster.h"
 
 
 #ifndef SSD1306XLED_H
@@ -60,8 +58,7 @@ class SSD1306Device //: private TinyI2CMaster
 
 	private:
 		void begin();
-    const TinyI2CMaster i2c;
-    
+
     void ssd1306_send_command_start(void);
     void ssd1306_send_command_stop(void);
 };

@@ -21,6 +21,7 @@
 #include <avr/pgmspace.h>
 
 #include "ssd1306xled.h"
+#include "WireWrap.h"
 
 #if 0
 #include "font6x8.h"
@@ -88,16 +89,19 @@ const uint8_t ata_init_seq []  PROGMEM = {
 #endif
 
 // Program:    5248 bytes
+namespace {
+  using wirerap::WireWrap;
+}
 
 SSD1306Device::SSD1306Device(void) {}
 
 void SSD1306Device::begin() {
-  i2c.init();
+  WireWrap::init();
 #ifndef TINY4KOLED_QUICK_BEGIN
-  while (!i2c.start(SSD1306_SA, 0)) {
+  while (!WireWrap::start(SSD1306_SA)) {
     delay(10);
   }
-  i2c.stop();
+  WireWrap::stop();
 #endif
 }
 
@@ -119,13 +123,13 @@ void SSD1306Device::ssd1306_init(void)
 }
 
 void SSD1306Device::ssd1306_send_command_start(void) {
-  i2c.stop();
-  i2c.start(SSD1306_SA, 0);
-  i2c.write(SSD1306_COMMAND);
+  WireWrap::stop();
+  WireWrap::start(SSD1306_SA);
+  WireWrap::write(SSD1306_COMMAND);
 }
 
 void SSD1306Device::ssd1306_send_command_stop() {
-  i2c.stop();
+  WireWrap::stop();
 }
 
 void SSD1306Device::ssd1306_send_command(uint8_t command) {
@@ -135,17 +139,17 @@ void SSD1306Device::ssd1306_send_command(uint8_t command) {
 }
 
 void SSD1306Device::ssd1306_send_byte(uint8_t byte) {
-  i2c.write(byte);
+  WireWrap::write(byte);
 }
 
 void SSD1306Device::ssd1306_send_data_start(void) {
-  i2c.stop();
-  i2c.start(SSD1306_SA, 0);
-  i2c.write(SSD1306_DATA);
+  WireWrap::stop();
+  WireWrap::start(SSD1306_SA);
+  WireWrap::write(SSD1306_DATA);
 }
 
 void SSD1306Device::ssd1306_send_data_stop() {
-  i2c.stop();
+  WireWrap::stop();
 }
 
 void SSD1306Device::ssd1306_fillscreen(uint8_t fill) {

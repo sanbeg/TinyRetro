@@ -34,6 +34,7 @@ namespace {
 const unsigned char USISR_8bit = 1 << USISIF | 1 << USIOIF | 1 << USIPF | 1 << USIDC | 0x0 << USICNT0;
 // Prepare register value to: Clear flags, and set USI to shift 1 bit i.e. count 2 clock edges.
 const unsigned char USISR_1bit = 1 << USISIF | 1 << USIOIF | 1 << USIPF | 1 << USIDC | 0xE << USICNT0;
+
 }
 
 TinyI2CMaster::TinyI2CMaster()
