@@ -68,7 +68,7 @@ void Select_Piece_TTRIS (uint8_t);
 void Sound_TTRIS (uint8_t, uint8_t);
 uint8_t SplitSpriteDecalageY_TTRIS (uint8_t, uint8_t, uint8_t);
 void Tiny_Flip_TTRIS (uint8_t);
-uint8_t blitzSprite_TTRIS (int8_t, int8_t, uint8_t, uint8_t, uint8_t, const);
+uint8_t blitzSprite_TTRIS (int8_t, int8_t, uint8_t, uint8_t, uint8_t, const uint8_t *);
 uint8_t checksum (uint8_t);
 uint8_t intro_TTRIS (uint8_t, uint8_t, uint8_t *);
 uint8_t recupe_Chateau_TTRIS (uint8_t, uint8_t);
