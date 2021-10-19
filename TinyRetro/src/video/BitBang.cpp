@@ -10,12 +10,10 @@ namespace wirerap {
   uint8_t Core::reg;
 
 
-
   #define I2C_PORT  PORTA
   #define I2C_DDR DDRA
   #define SSD1306_SCL   PORTA4 //PORTB4  // SCL, Pin 4 on SSD1306 Board - for webbogles board
   #define SSD1306_SDA   PORTA6 //PORTB3  // SDA, Pin 3 on SSD1306 Board - for webbogles board
-  //#define SSD1306_SA    0x78  // Slave address
 
   #define DIGITAL_WRITE_HIGH(PORT) I2C_PORT |= (1 << PORT)
   #define DIGITAL_WRITE_LOW(PORT) I2C_PORT &= ~(1 << PORT)
@@ -43,8 +41,7 @@ namespace wirerap {
 
      void BitBang::send_byte(uint8_t byte) {
       uint8_t i;
-      for(i=0; i<8; i++)
-      {
+      for(i=0; i<8; i++) {
         if((byte << i) & 0x80)
           DIGITAL_WRITE_HIGH(SSD1306_SDA);
         else
@@ -59,13 +56,12 @@ namespace wirerap {
     }
 
      void BitBang::write(uint8_t data) {
-      send_byte(data);
+       send_byte(data);
     }
 
      bool BitBang::start(uint8_t addr) {
       xfer_start();
       send_byte(addr << 1);
-      //send_byte(0x40);
       return true;
     }
 
