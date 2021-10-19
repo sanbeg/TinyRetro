@@ -1,6 +1,9 @@
 
-#include "TinyI2CMaster.h"
 #include <stdint.h>
+
+#include "TinyI2CMaster.h"
+
+#include <Wire.h>
 
 namespace wirerap {
 
@@ -27,10 +30,64 @@ namespace wirerap {
 
   };
 
+class Core {
+private:
+  static uint8_t address;
+  static uint8_t cnt;
+  static uint8_t reg;
+public:
+  static void init() {
+    Wire.begin();
+  }
+  static bool start(uint8_t addr) {
+    address = addr;
+    cnt = 1;
+    reg = 0;
+    Wire.beginTransmission(addr);
+    return true;
+  }
+  static void stop() {
+    //address = 0;
+    //cnt = 0;
+    //reg = 0;
+    Wire.endTransmission();
+  }
+  // this probably buffers, needs to occationally flush
+  static void write(uint8_t data) {
+    if (cnt == 1) {
+      reg = data;
+    }
+    if (++cnt >= 16) {
+      Wire.endTransmission();
+      cnt = 2;
+      Wire.beginTransmission(address);
+      Wire.write(reg);
+    }
+    Wire.write(data);
+  }
+};
 
-  class WireWrap : public Tiny {
 
-  };
+
+// bitbang
+
+// Defines for OLED output
+
+class BitBang {
+private:
+
+static void xfer_start(void);
+static void xfer_stop(void);
+
+public:
+  static void init();
+  static void send_byte(uint8_t byte);
+  static void write(uint8_t data);
+  static bool start(uint8_t addr);
+  static void stop();
+};
+
+  class WireWrap : public BitBang {};
 
 
 }

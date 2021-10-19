@@ -522,6 +522,7 @@ void playFrogger() {
 
   while (!gb.update());
   while (lives >= 0) {
+    delay(16); // may need delay -w- bitbang?
     //drawFrog(frogMode, 0);
     //drawLives();
     //doNumber(0, 7, score);
