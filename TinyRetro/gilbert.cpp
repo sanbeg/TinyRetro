@@ -26,7 +26,7 @@ namespace gilbert {
 
 #include "gilbert_spritebank.h"
 
-const uint8_t MAX_TIMER = 30; // was 60, controls key spinning effect.
+const uint8_t MAX_TIMER = 20; // was 60, controls key spinning effect.
 const uint8_t TIMER_INC = 2;  // was 4, controls walking animation
 
 uint8_t Map[8][34] = {{0}};
@@ -643,7 +643,7 @@ void Tiny_Flip(DriftSprite* DSprite) {
           VSlideOut = vslide(DSprite->y8decalage);
         }
 
-        uint8_t * sprite = 0;
+        const uint8_t * sprite = 0;
         if (LorR == 1) {
           switch (MainAnim) {
             case 0:
@@ -681,7 +681,7 @@ void Tiny_Flip(DriftSprite* DSprite) {
         //fin main sprite
 
       } else if (while1 != 0) {
-        uint8_t * sprite = 0;
+        const uint8_t * sprite = 0;
         switch (Map[m][n]) {
           case 1:
             sprite = sprite1;
@@ -696,7 +696,8 @@ void Tiny_Flip(DriftSprite* DSprite) {
             sprite = sprite4;
             break;
           case 8:
-            sprite = sprite8;
+            //sprite = (timer > MAX_TIMER / 2) ? sprite8 : sprite9;
+            sprite = ((timer%(MAX_TIMER/2)) > MAX_TIMER / 4) ? sprite8 : sprite9;
             break;
           case 15:
             sprite = sprite15;
