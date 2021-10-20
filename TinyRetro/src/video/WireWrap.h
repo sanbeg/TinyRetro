@@ -75,9 +75,8 @@ public:
 
 class BitBang {
 private:
-
-static void xfer_start(void);
-static void xfer_stop(void);
+  static void xfer_start(void);
+  static void xfer_stop(void);
 
 public:
   static void init();
@@ -87,7 +86,7 @@ public:
   static void stop();
 };
 
-  class WireWrap : public BitBang {};
+class WireWrap : public Tiny {};
 
 
 }
