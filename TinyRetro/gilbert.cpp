@@ -696,8 +696,7 @@ void Tiny_Flip(DriftSprite* DSprite) {
             sprite = sprite4;
             break;
           case 8:
-            //sprite = (timer > MAX_TIMER / 2) ? sprite8 : sprite9;
-            sprite = ((timer%(MAX_TIMER/2)) > MAX_TIMER / 4) ? sprite8 : sprite9;
+            sprite = ((timer%(MAX_TIMER/5)) > MAX_TIMER / 10) ? sprite8 : sprite9;
             break;
           case 15:
             sprite = sprite15;
