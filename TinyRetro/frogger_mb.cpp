@@ -41,7 +41,7 @@
 
 #include "Gamebuino.h"
 
-namespace frogger_mb {
+namespace frogger {
 //creates a Gamebuino object named gb
 Gamebuino gb;
 
@@ -110,6 +110,7 @@ int dockedFrogs;          // How many frogs are in the docks at the top
 unsigned long clickBase;  // Timer for debounce
 boolean clickLock;        // For debounce routine
 int score;                // Obvious I hope
+uint8_t debt;             // Jumping backwards accumulates debt
 int topScore;             // High score
 boolean newHigh;          // Is there a new high score?
 boolean mute = 0;         // Mute the speaker
@@ -490,6 +491,7 @@ void playFrogger() {
 
   stopAnimate = 0;
   score = 0;
+  debt = 0;
   moveDelay = MOVEBASE;
   level = 1;
   frogColumn = 8;
@@ -645,13 +647,13 @@ void playFrogger() {
     // Handle 'move back' button press
     if (moveBack == 1) {
       moveBack = 0;
-      if (frogRow < 7) score -= level;         // decrement the score for every move back
       if (frogRow < 7) {
         // Correct for the skew in frog position created by the blockShift scrolling parameter
         if (frogRow == 3 && blockShiftL < 4) frogColumn++;
         if (frogRow == 2 && blockShiftR + blockShiftL < 5) frogColumn--;
         if (frogRow == 1 && blockShiftR + blockShiftL < 5) frogColumn++;
         frogRow++;
+        debt ++;                  // decrement the score for every move back
         frogMode = 4;             // mode 1 = forwards position
       }
     }
@@ -660,7 +662,12 @@ void playFrogger() {
     if (moveForward == 1) {
       moveForward = 0;
 
-      score += level;         // increment the score for every move
+      if (debt > 0) {
+        debt --;
+      } else {
+        score += level;       // increment the score for every move
+      }
+
       doNumber(0, 7, score);  // display new score
       drawFrog(0, 0);         // delete the frog
 

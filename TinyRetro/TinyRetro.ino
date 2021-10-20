@@ -7,9 +7,9 @@
 
 //play_game(demo);
 //play_game(frogger_ata);
-//play_game(frogger_mb);
+play_game(frogger);
 //play_game(space_attack);
-play_game(gilbert);
+//play_game(gilbert);
 //play_game(ttris);
 
 SSD1306Device oled;
