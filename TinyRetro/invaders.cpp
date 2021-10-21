@@ -84,19 +84,12 @@ void setup() {
 }
 
 void LoadMonstersLevels(int8_t Levels,SPACE *space){
-        uint8_t x,y;
-        for (y=0; y<5; y++) {
-                for (x=0; x<6; x++) {
-                  space->MonsterGrid[y][x]= (y==4) ? -1 : pgm_read_byte(&MonstersLevels[(Levels*24)+((y)*6)+(x)]);
-                  /*
-                        if (y!=4) {
-                          space->MonsterGrid[y][x]=pgm_read_byte(&MonstersLevels[(Levels*24)+((y)*6)+(x)]);
-                        }else{
-                          space->MonsterGrid[y][x]=-1;
-                        }
-                        */
-                }
-        }
+  uint8_t x,y;
+  for (y=0; y<5; y++) {
+    for (x=0; x<6; x++) {
+      space->MonsterGrid[y][x]= (y==4) ? -1 : pgm_read_byte(&MonstersLevels[(Levels*24)+((y)*6)+(x)]);
+    }
+  }
 }
 
 void loop() {
@@ -105,7 +98,7 @@ void loop() {
         uint8_t VarPot;
         uint8_t MyShootReady=SHOOTS;
         SPACE space;
-NEWGAME:;
+NEWGAME:
         Live=3;
         LEVELS=0;
         while(1) {
@@ -134,10 +127,18 @@ Bypass:
         _delay_ms(1000);
         while(1) {
                 if (MONSTERrest==0) {
-                        Sound(110,255); _delay_ms(40); Sound(130,255); _delay_ms(40); Sound(100,255);
-                        _delay_ms(40); Sound(1,155); _delay_ms(20); Sound(60,255); Sound(60,255);
-                        if (LEVELS<9) {LEVELS++;}
-                        goto NEWLEVEL;
+                  Sound(110,255);
+                  _delay_ms(40);
+                  Sound(130,255);
+                  _delay_ms(40);
+                  Sound(100,255);
+                  _delay_ms(40);
+                  Sound(1,155);
+                  _delay_ms(20);
+                  Sound(60,255);
+                  Sound(60,255);
+                  if (LEVELS<9) {LEVELS++;}
+                  goto NEWLEVEL;
                 }
                 if ((((space.MonsterGroupeYpos)+(space.MonsterFloorMax+1))==7)&&(Decompte==0)) {ShipDead=1;}
                 if (SpeedShootMonster<=((9-LEVELS))) {SpeedShootMonster++;}else{SpeedShootMonster=0; MonsterShootGenerate(&space);}
@@ -151,7 +152,18 @@ Bypass:
                 if (VarPot>(ShipPos+2)) {ShipPos=ShipPos+((VarPot-ShipPos)/3);}
                 if (VarPot<(ShipPos-2)) {ShipPos=ShipPos-((ShipPos-VarPot)/3);}
                 if (ShipDead!=1) {
-                  if (space.frame<space.frameMax) {space.frame++;}else{GRIDMonsterFloorY(&space); space.anim=!space.anim; if (space.anim==0) {SnD(space.UFOxPos,200);}else{SnD(space.UFOxPos,100);} MonsterRefreshMove(&space); space.frame=0;}
+                  if (space.frame<space.frameMax) {
+                    space.frame++;
+                  }else{
+                    GRIDMonsterFloorY(&space);
+                    space.anim=!space.anim;
+                    if (space.anim==0) {
+                      SnD(space.UFOxPos,200);
+                    }else{
+                      SnD(space.UFOxPos,100);
+                    }
+                    MonsterRefreshMove(&space); space.frame=0;
+                  }
                   //VarPot=map(analogRead(A3),0,1023,0,114);
                   if (isPressed(control::BTN_L)) {
                     if (VarPot>5) {VarPot=VarPot-6;}
@@ -193,7 +205,8 @@ void SpeedControle(SPACE *space){
                 for (xx=0; xx<6; xx++) {
                         if ((space->MonsterGrid[yy][xx]!=-1)&&((space->MonsterGrid[yy][xx]<=5)) ) {MONSTERrest++;}
                 }
-        } space->frameMax=(MONSTERrest/8 );
+        }
+        space->frameMax=(MONSTERrest/8 );
 }
 
 /*Thanks to Sven Bruns for informing me of an error in this function!*/
@@ -248,8 +261,7 @@ void Tiny_Flip(uint8_t render0_picture1,SPACE *space){
         if (render0_picture1==0) {
                 if ((space->MonsterGroupeYpos<(2+(4-(space->MonsterFloorMax+1)))) /*&&(LEVELS<=MAXLEVELSHIELDED)*/) {
 
-                }else{
-                        if (ShieldRemoved!=1) {
+                }else if (ShieldRemoved!=1) {
                                 space->Shield[0]=0x00;
                                 space->Shield[1]=0x00;
                                 space->Shield[2]=0x00;
@@ -258,7 +270,6 @@ void Tiny_Flip(uint8_t render0_picture1,SPACE *space){
                                 space->Shield[5]=0x00;
                                 ShieldRemoved=1;
                         }
-                }
         }
 }
 
@@ -311,15 +322,11 @@ void MonsterShootGenerate(SPACE *space){
 
 uint8_t MonsterShoot(uint8_t x,uint8_t y,SPACE *space){
         if ((((space->MonsterShoot[1])/2)==y)&&(space->MonsterShoot[0]==x) ) {
-
-          //return (((space->MonsterShoot[1])%2)==0) ? 0b00001111 : 0b11110000;
-
           if (((space->MonsterShoot[1])%2)==0) {
             return 0b00001111;
           }else{
             return 0b11110000;
           }
-
         }
         return 0x00;
 }

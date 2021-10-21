@@ -86,7 +86,7 @@ public:
   static void stop();
 };
 
-class WireWrap : public Tiny {};
+class WireWrap : public BitBang {};
 
 
 }
