@@ -6,9 +6,10 @@
 #define play_game(g) namespace g{void loop();void setup();} namespace game{using namespace g;}
 
 //play_game(demo);
-play_game(arkanoid);
+//play_game(arkanoid);
 //play_game(bike);
 //play_game(bomber);
+play_game(ddug);
 //play_game(frogger);
 //play_game(frogger_ata);
 //play_game(gilbert);
