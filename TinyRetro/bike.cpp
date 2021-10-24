@@ -152,10 +152,8 @@ sprite[t].Y_END=0;
 
 void setup() {
 SSD1306.ssd1306_init();
-pinMode(1,INPUT);
-pinMode(4,OUTPUT);
-pinMode(A0,INPUT);
-pinMode(A3,INPUT);
+control::setup();
+beeper.setup();
 }
 
 void intro_sound(void){
