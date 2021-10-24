@@ -9,12 +9,12 @@ class Beeper
   static const uint8_t mask = 1<<P;
   public:
 
-    void setup() {
+    static void setup() {
       //pinMode(10, OUTPUT);
       DDRB |= mask;
     }
 
-    void beep(int bCount, int bDelay) {
+    static void beep(int bCount, int bDelay) {
       for (int i = 0; i <= bCount; i++) {
         //digitalWrite(10, HIGH);
         PORTB |= mask;
