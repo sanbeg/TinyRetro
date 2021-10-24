@@ -113,18 +113,12 @@ int score;                // Obvious I hope
 uint8_t debt;             // Jumping backwards accumulates debt
 int topScore;             // High score
 boolean newHigh;          // Is there a new high score?
-boolean mute = 0;         // Mute the speaker
 byte grid[6][16];         // Grid for items like logs, crocs, cars and lorries
 byte frogMode;            // Represents the frog direction
 bool moveForward = 0;     // Captures when the 'forward' button is pressed
 bool moveLeft = 0;        // Captures when the 'left' button is pressed
 bool moveRight = 0;       // Captures when the 'right' button is pressed
 bool moveBack = 0;       // Captures when the 'right' button is pressed
-
-int screenLeft = 0;       // Current left position of the displayed screen
-int screenTop = 0;        // Current top of the displayed screen
-byte currentX = 0;        // Current X positon to draw
-byte currentY = 0;        // Current Y positon to draw
 
 // Bitmaps created by @senkunmusahi using https://www.riyas.org/2013/12/online-led-matrix-font-generator-with.html
 static const byte  bitmaps[16][8] PROGMEM = {
@@ -279,8 +273,6 @@ void setup() {
 
 void displayOpenScreen(int incr) {
   lcdDisplay_fillscreen(0);
-  if (incr < 99) screenLeft = incr;
-
   lcdDisplay_char_f6x8(0, 1, "F R O G G E R");
   lcdDisplay_char_f6x8(0, 3, "andy jackson");
   //lcdDisplay_char_f6x8(64, 6, "Press A...");
@@ -327,9 +319,6 @@ void loop() {
   lcdDisplay_fillscreen(0);
   int sChange = 0;
 
-  screenLeft = 0;
-  screenTop = 0;
-
   if (gb.buttons.pressed(BTN_B) == true) {
     sChange = 1;
     EEPROM.write(0, 0);
@@ -347,9 +336,6 @@ void loop() {
 
     playFrogger();
 
-    screenLeft = 0;
-    screenTop = 0;
-
     topScore = EEPROM.read(0);
     topScore = topScore << 8;
     topScore = topScore |  EEPROM.read(1);
@@ -361,8 +347,6 @@ void loop() {
       EEPROM.write(0, (score >> 8) & 0xFF);
       newHigh = 1;
     }
-
-    screenLeft = 0;
 
     lcdDisplay_fillscreen(0x00);
     lcdDisplay_char_f6x8(0, 0, "------------");
@@ -400,39 +384,16 @@ void showScore(void) {
 }
 
 void lcdDisplay_send_byte(uint8_t input) {
-  /*
-    uint8_t *disp;
-
-    disp = gb.display.getBuffer();
-
-    if ( (currentX >= screenLeft) && (currentX < screenLeft + 84) && (currentY >= screenTop) && (currentY <= screenTop + 5)) {
-     (disp + currentX - screenLeft + ((currentY - screenTop) * 84)) = input;
-    }
-    currentX++;
-  */
   oled.ssd1306_send_byte(input);
 
 }
 
 void lcdDisplay_setpos(uint8_t x, uint8_t y)
 {
-  //currentX = x;
-  //currentY = y;
-
   oled.ssd1306_setpos(x, y);
-
 }
 
 void lcdDisplay_fillscreen(uint8_t fill_Data) {
-  /*
-    gb.display.setColor(WHITE, BLACK);
-
-    for (int i = 0; i < 64; i++) {
-    for (int j = 0; j < 128; j++) {
-      gb.display.drawPixel(j, i);
-    }
-    }
-  */
   oled.ssd1306_fillscreen(fill_Data);
 }
 
@@ -519,9 +480,6 @@ void playFrogger() {
   drawGameScreen(frogMode);
   drawDocks();
 
-  screenLeft = 0;
-  screenTop = 0;
-
   while (!gb.update());
   while (lives >= 0) {
     delay(16); // may need delay -w- bitbang?
@@ -530,29 +488,6 @@ void playFrogger() {
     //doNumber(0, 7, score);
     drawGameScreen(frogMode);
     //drawDocks();
-
-#if 1
-    if (frogColumn * 8 < screenLeft + 40) screenLeft--;
-    if (frogColumn * 8 > screenLeft + 50) screenLeft++;
-    if (frogColumn * 8 < screenLeft + 15) screenLeft--;
-    if (frogColumn * 8 > screenLeft + 60) screenLeft++;
-
-#else
-    if (frogRow == 1 || frogRow == 3) {
-      screenLeft = frogColumn * 8 - 30 - blockShiftL;
-    } else if (frogRow == 2) {
-      screenLeft = frogColumn * 8 - 30 + blockShiftR;
-    } else {
-      screenLeft = frogColumn * 8 - 30;
-    }
-#endif
-
-    screenTop =  frogRow - 3;
-
-    if (screenLeft < 0) screenLeft = 0;
-    if (screenTop < 0) screenTop = 0;
-    if (screenLeft > 43) screenLeft = 43;
-    if (screenTop > 2) screenTop = 2;
 
     while (!gb.update());
     interimStep++;
@@ -1042,8 +977,6 @@ void resetDock(byte value) {
 // Handle what happens at the end of a level
 void levelUp(int number) {
   // Flash the frog docks
-  screenLeft = 0;
-  screenTop = 0;
 
   delay(200);
   for (byte incr = 0; incr < 5; incr ++) {
