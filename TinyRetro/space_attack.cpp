@@ -124,9 +124,15 @@ inline void ssd1306_send_byte(uint8_t b) {
   oled.ssd1306_send_byte(b);
 }
 
+void beep(int bCount, int bDelay) {
+  if (! mute) {
+    beeper.beep(bCount, bDelay);
+  }
+}
+
 void setup() {
-  DDRB = 0b00000010;    // set PB1 as output (for the speaker)
   control::setup();
+  beeper.setup();
 }
 
 // Arduino stuff - loop
@@ -202,7 +208,7 @@ void loop() {
         ssd1306_send_data_start();
         sendBlock(0);
         ssd1306_send_data_stop();
-        beeper.beep(30, 100);
+        beep(30, 100);
       }
       ssd1306_setpos(mm, 0);
       ssd1306_send_data_start();
@@ -239,7 +245,7 @@ void loop() {
       doNumber(88, 7, top);
     }
     for (int i = 0; i < 1000; i = i + 50) {
-      beeper.beep(50, i);
+      beep(50, i);
     }
     delay(2000);
     if (newHigh) {
@@ -249,7 +255,7 @@ void loop() {
       ssd1306_char_f6x8(10, 7, "----------------");
       doNumber(50, 5, top);
       for (int i = 700; i > 200; i = i - 50) {
-        beeper.beep(30, i);
+        beep(30, i);
       }
       newHigh = 0;
       delay(2700);
@@ -437,10 +443,10 @@ void playSpaceAttack() {
               score += 300;
             }
 
-            beeper.beep(30, 400);
-            beeper.beep(30, 300);
-            beeper.beep(30, 200);
-            beeper.beep(30, 100);
+            beep(30, 400);
+            beep(30, 300);
+            beep(30, 200);
+            beep(30, 100);
             mothership = 0;
             ssd1306_setpos(mothershipX, 0);
             ssd1306_send_data_start();
@@ -473,7 +479,7 @@ void playSpaceAttack() {
               ssd1306_send_data_start();
               ssd1306_send_byte(temp);
               ssd1306_send_data_stop();
-              beeper.beep(30, 100);
+              beep(30, 100);
 
               fire = 0;
               playerFire[0] = 0;
@@ -646,7 +652,7 @@ void levelUp(int number) {
   ssd1306_char_f6x8(16, 5, "--------------");
   doNumber(85, 4, number);
   for (int i = 800; i > 200; i = i - 200) {
-    beeper.beep(30, i);
+    beep(30, i);
   }
   delay(700);
   ssd1306_fillscreen(0x00);

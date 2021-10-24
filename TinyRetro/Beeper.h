@@ -8,7 +8,6 @@ class Beeper
   private:
   static const uint8_t mask = 1<<P;
   public:
-    bool mute = 0;         // Mute the speaker
 
     void setup() {
       //pinMode(10, OUTPUT);
@@ -16,7 +15,6 @@ class Beeper
     }
 
     void beep(int bCount, int bDelay) {
-      if (mute) return;
       for (int i = 0; i <= bCount; i++) {
         //digitalWrite(10, HIGH);
         PORTB |= mask;

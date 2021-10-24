@@ -98,8 +98,15 @@ boolean newHigh;          // Is there a new high score?
 byte grid[6][16];         // Grid for items like logs, crocs, cars and lorries
 byte frogMode;            // Represents the frog direction
 
+bool mute = 0;
 Beeper<> beeper;
 SSD1306Device oled;
+
+void beep(int bCount, int bDelay) {
+  if (! mute) {
+    beeper.beep(bCount, bDelay);
+  }
+}
 
 // Bitmaps created by @senkunmusahi using https://www.riyas.org/2013/12/online-led-matrix-font-generator-with.html
 static const byte  bitmaps[][8] PROGMEM = {
@@ -180,6 +187,7 @@ void displayTitle(void) {
 void setup() {
   DDRB = 0b00000010;    // set PB1 as output (for the speaker)
   control::setup();
+  beeper.setup();
   sei();          // enable all interrupts
 }
 
@@ -228,11 +236,11 @@ void loop() {
         EEPROM.write(0, 0);
         EEPROM.write(1, 0);
         ssd1306_char_f6x8(8, 0, "-HIGH SCORE RESET-");
-      } else if (beeper.mute == 0) {
-        beeper.mute = 1;
+      } else if (mute == 0) {
+        mute = 1;
         ssd1306_char_f6x8(32, 0, "-- MUTE --");
       } else {
-        beeper.mute = 0;
+        mute = 0;
         ssd1306_char_f6x8(31, 0, "- SOUND ON -");
       }
       break;
@@ -275,7 +283,7 @@ void loop() {
       ssd1306_char_f6x8(10, 7, "----------------");
       doNumber(50, 5, topScore);
       for (int i = 700; i > 200; i = i - 50) {
-        beeper.beep(30, i);
+        beep(30, i);
       }
     } else {
       ssd1306_char_f6x8(21, 7, "HIGH SCORE:");
@@ -434,7 +442,7 @@ void playFrogger() {
           frogRow = 7;                                        // reposition the frog at the start
           frogColumn = 8;
           for (int i = 1000; i > 200; i = i - 100) {          // make sound
-            beeper.beep(10, i);
+            beep(10, i);
             drawDocks();                                        // redraw the docks
           }
         } else stopAnimate = 1;
@@ -463,9 +471,9 @@ void playFrogger() {
       // redraw the screen
       drawGameScreen(frogMode);
       // make jump sound
-      beeper.beep(30, 400);
-      beeper.beep(30, 300);
-      beeper.beep(30, 200);
+      beep(30, 400);
+      beep(30, 300);
+      beep(30, 200);
     }
 
     checkCollision();
@@ -484,19 +492,19 @@ void playFrogger() {
       // animation for frog death
       drawFrog(0, 1);
       for (int i = 0; i < 250; i = i + 50) {
-        beeper.beep(50, i);
+        beep(50, i);
       }
       drawFrog(frogMode, 1);
       for (int i = 250; i < 500; i = i + 50) {
-        beeper.beep(50, i);
+        beep(50, i);
       }
       drawFrog(0, 1);
       for (int i = 500; i < 750; i = i + 50) {
-        beeper.beep(50, i);
+        beep(50, i);
       }
       drawFrog(frogMode, 1);
       for (int i = 750; i < 1000; i = i + 50) {
-        beeper.beep(50, i);
+        beep(50, i);
       }
       delay(600);
       lives--;          // increment the score for every move
@@ -724,12 +732,12 @@ void levelUp(int number) {
     resetDock(0);
     drawDocks();
     for (int i = 800; i > 200; i = i - 200) {
-      beeper.beep(20, i);
+      beep(20, i);
     }
     resetDock(1);
     drawDocks();
     for (int i = 800; i > 200; i = i - 200) {
-      beeper.beep(20, i);
+      beep(20, i);
     }
   }
   delay(500);
