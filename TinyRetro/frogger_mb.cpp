@@ -54,19 +54,6 @@ Gamebuino gb;
 // The basline speed - higher number is slower
 #define MOVEBASE 1000
 
-#define DIGITAL_WRITE_HIGH(PORT) PORTB |= (1 << PORT)
-#define DIGITAL_WRITE_LOW(PORT) PORTB &= ~(1 << PORT)
-
-// Routines to set and clear bits (used in the sleep code)
-#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
-#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
-
-// Defines for OLED output
-#define lcdDisplayXLED_H
-#define lcdDisplay_SCL   PORTB4  // SCL, Pin 4 on lcdDisplay Board - for webbogles board
-#define lcdDisplay_SDA   PORTB3  // SDA, Pin 3 on lcdDisplay Board - for webbogles board
-#define lcdDisplay_SA    0x78  // Slave address
-
 // Function prototypes
 
 // Custom draw functions - allow for extra functionality like inverse display
