@@ -23,10 +23,76 @@
 //Program chip with arduino uno as isp at 16 mhz internal!
 //The reset pin still works and the chip can be reprogrammed without difficulty!
 
-#include <ssd1306xled.h>
-#include "spritebank.h"
+#include "src/video/ssd1306xled.h"
+#include "Control.h"
+#include "Beeper.h"
 
-#define NUMofSPRITE 2
+namespace bike {
+
+#include "bike.h"
+
+const int NUMofSPRITE = 2;
+
+void ADD_LIVE(uint8_t);
+void AdjustVarScroll(void);
+uint8_t BACKGROUND(uint8_t, uint8_t);
+uint8_t BIGSTEP_SPRITE(uint8_t, uint8_t, uint8_t);
+uint8_t BIKE_SPRITE(uint8_t, uint8_t);
+uint8_t BLITZ_SPRITE_MAP(uint8_t, uint8_t);
+void Break_Gravity(void);
+uint8_t CHECK_SPEED_ADJ(float);
+void CLIMB_ADJ0(void);
+void CLIMB_ADJ1(void);
+void CLIMB_ADJ2(void);
+void CLIMB_ADJ3(void);
+uint8_t CREATE_NEWSPRITE(void);
+void CheckCollision(void);
+void End_Line_Win_sound(void);
+uint8_t FOUL1(void);
+uint8_t GAME_PLAY(void);
+uint8_t GRADIN23(uint8_t);
+void GRAVITY_ADJ(void);
+uint8_t HUILE_SPRITE(uint8_t, uint8_t, uint8_t);
+void Higher_adj(uint8_t);
+void INCREMENTE_SCROLL(void);
+void JUMP_ADJ(void);
+uint8_t LINE_SPRITE(uint8_t, uint8_t, uint8_t);
+uint8_t MINISTEP_SPRITE(uint8_t, uint8_t, uint8_t);
+uint8_t NEW_LIVE(uint8_t, uint8_t, uint8_t);
+void Next_Level(void);
+void PLANTAGE(void);
+void Pause1(void);
+uint8_t Plantage(uint8_t, uint8_t, uint8_t);
+uint8_t RECUPE_MAP_BYTE(const uint8_t *);
+uint8_t RECUPE_X_SPRITE(uint8_t);
+uint8_t RECUPE_Y_SPRITE(uint8_t);
+void RESET_FOR_NEW_GAME(void);
+uint8_t ROAD567(uint8_t);
+uint8_t Recupe(uint8_t, uint8_t);
+void RecupeDecalageY(uint8_t);
+void RefreshPosSprite(void);
+void ResetSprite(void);
+uint8_t Return_Progress(uint8_t);
+uint8_t Return_live(uint8_t);
+uint8_t Return_time(uint8_t);
+uint8_t SPEED_SPRITE(uint8_t, uint8_t, uint8_t);
+uint8_t SPLIT_MAP_BYTE(uint8_t, uint8_t);
+uint8_t START_SPRITE(uint8_t, uint8_t, uint8_t);
+void Sound(uint8_t, uint8_t);
+uint8_t SplitSpriteDecalageY(uint8_t, uint8_t, uint8_t);
+uint8_t TABLEAU8(uint8_t);
+void TIME_TRACK(void);
+uint8_t TIRE4(void);
+uint8_t TOPBACK(uint8_t, uint8_t);
+void TRACK_RUN_ADJ(void);
+void Tiny_Flip(uint8_t);
+uint8_t Trouver_Sprite_Collisionner(void);
+void analise_minutieuse(void);
+uint8_t blitzSprite(int8_t, int8_t, uint8_t, uint8_t, uint8_t, const uint8_t *);
+void dinamic_adj(void);
+void intro_sound(void);
+void restore_start_line(void);
+
 uint8_t ReWind=0;
 uint8_t End_game=0;
 int8_t Live=3;
@@ -54,7 +120,7 @@ float gravity_expo=0;
 uint8_t BIKE_POSy=33;
 uint8_t TRIG_OK=0;
 uint16_t MAP_POS=0;
-uint8_t animBike=1; 
+uint8_t animBike=1;
 uint8_t RENEW_SPRITE=0;
 uint8_t NoSprite=0;
 uint8_t FOUL_BLITZ=0;
@@ -64,13 +130,15 @@ uint8_t VAR_SCROLL3=0;
 uint8_t Not_Move=0;
 uint8_t Not_Turn=0;
 uint8_t Wheel_up=1;
-uint8_t FREEAIR=0; 
+uint8_t FREEAIR=0;
 uint8_t BypassWheelupreset=0;
 uint8_t Latch1=0;
 uint8_t PLANTAGE_0=0;
 uint8_t Pause=0;
-Sprite sprite[NUMofSPRITE]; 
+Sprite sprite[NUMofSPRITE];
 const uint8_t *INTROPIC;
+
+Beeper <> beeper;
 
 void ResetSprite(void){
 for (uint8_t t=0;t<NUMofSPRITE;t++){
@@ -86,21 +154,21 @@ void setup() {
 SSD1306.ssd1306_init();
 pinMode(1,INPUT);
 pinMode(4,OUTPUT);
-pinMode(A0,INPUT); 
+pinMode(A0,INPUT);
 pinMode(A3,INPUT);
 }
 
 void intro_sound(void){
-Sound(100,255); 
-_delay_ms(400); 
-Sound(100,255); 
-_delay_ms(400); 
-Sound(100,255); 
-_delay_ms(400); 
-Sound(155,255); 
+Sound(100,255);
+_delay_ms(400);
+Sound(100,255);
+_delay_ms(400);
+Sound(100,255);
+_delay_ms(400);
 Sound(155,255);
-Sound(155,255); 
-Sound(155,255); 
+Sound(155,255);
+Sound(155,255);
+Sound(155,255);
 }
 
 void End_Line_Win_sound(void){
@@ -111,8 +179,8 @@ for(uint8_t t=0;t<5;t++){
 
 void restore_start_line(void){
 sprite[0].ACTIVE=1;
-sprite[0].TypeofSprite=5;  
-sprite[0].xPOS=36;  
+sprite[0].TypeofSprite=5;
+sprite[0].xPOS=36;
 sprite[0].yPOS=32;
 }
 
@@ -295,7 +363,7 @@ for(uint8_t t=0;t<NUMofSPRITE;t++){
 if (sprite[t].ACTIVE!=0) {
 if ((sprite[t].xPOS>xBike)||((sprite[t].xPOS+RECUPE_X_SPRITE(sprite[NoSprite].TypeofSprite))<xBike)||(trackrun>sprite[t].Y_END)||(trackrun<sprite[t].Y_START)) {goto TIEND;}
 NoSprite=t;
-goto Fin; 
+goto Fin;
 TIEND:;
 }}
 return 0;
@@ -304,7 +372,7 @@ return 1;
 }
 
 void analise_minutieuse(void){
-switch(sprite[NoSprite].TypeofSprite){ 
+switch(sprite[NoSprite].TypeofSprite){
    case(1):CLIMB_ADJ0();break;
    case(2):CLIMB_ADJ1();break;
    case(3):if ((ACCEL>2)&&(FREEAIR==0)){ACCEL=ACCEL-0.20;}break;
@@ -340,7 +408,7 @@ Wheel_up=3;
 void Break_Gravity(void){
 if (POS_JUMP==0) {
 gravity_expo=0;
-if ((FREEAIR==0)&&(Wheel_up==1)) {if (ACCEL>5) {ACCEL=ACCEL-2;}}} 
+if ((FREEAIR==0)&&(Wheel_up==1)) {if (ACCEL>5) {ACCEL=ACCEL-2;}}}
 }
 
 void CLIMB_ADJ1(void){
@@ -377,7 +445,7 @@ void TRACK_RUN_ADJ(void){
 if (trackrun!=Trackrun_progress) {
  if ((trackrun<Trackrun_progress)&&(TRANSITION_TRACK==0)){TRANSITION_TRACK=5;}
  if ((trackrun>Trackrun_progress)&&(TRANSITION_TRACK==0)){TRANSITION_TRACK=-5;}
-  
+
  if (TRANSITION_TRACK>0){TRANSITION_TRACK--;animBike=8;BIKE_POSy++;}
  else if (TRANSITION_TRACK<0){TRANSITION_TRACK++;animBike=7;BIKE_POSy--;}
 if (TRANSITION_TRACK==0) {TRIG_OK=0;trackrun=Trackrun_progress;}}
@@ -442,7 +510,7 @@ RENEW_SPRITE=0;
 if (type==14) {ReWind=1;}
 if ((type!=15)&&(ReWind!=1)) {MAP_POS++;}
 return 0;
-}} 
+}}
 return 0;
 }
 
@@ -465,18 +533,18 @@ return pgm_read_byte(&TOP_BACK[xPASS+(yPASS*128)]);
 
 uint8_t FOUL1(void){
 if (BScroll1<7) {BScroll1++;}else{BScroll1=0;}
-return pgm_read_byte(&FOUL[BScroll1]);  
+return pgm_read_byte(&FOUL[BScroll1]);
 }
 uint8_t GRADIN23(uint8_t yPASS){
 uint8_t MUL=0;
 if (yPASS==2) {return 0;MUL=8;}
 if (BScroll1<7) {BScroll1++;}else{BScroll1=0;}
-return pgm_read_byte(&GRADIN[BScroll1+MUL]);  
+return pgm_read_byte(&GRADIN[BScroll1+MUL]);
 }
 
 uint8_t TIRE4(void){
 if (BScroll2<14) {BScroll2++;}else{BScroll2=0;}
-return pgm_read_byte(&TIRE[BScroll2]);  
+return pgm_read_byte(&TIRE[BScroll2]);
 }
 
 uint8_t ROAD567(uint8_t yPASS){
@@ -484,10 +552,10 @@ uint8_t MUL=0;
 MUL=(yPASS==5)?10:MUL;
 MUL=(yPASS==6)?20:MUL;
 if (BScroll3<9) {BScroll3++;}else{BScroll3=0;}
-return pgm_read_byte(&ROAD[BScroll3+MUL]);  
+return pgm_read_byte(&ROAD[BScroll3+MUL]);
 }
 uint8_t TABLEAU8(uint8_t xPASS){
-return ((0xff-pgm_read_byte(&DISPLAY8[xPASS]))|Return_live(xPASS)|Return_time(xPASS)|(Return_Progress(xPASS)));  
+return ((0xff-pgm_read_byte(&DISPLAY8[xPASS]))|Return_live(xPASS)|Return_time(xPASS)|(Return_Progress(xPASS)));
 }
 
 uint8_t Return_live(uint8_t xPASS){
@@ -507,12 +575,12 @@ uint8_t Return_live(uint8_t xPASS){
 
 uint8_t Return_time(uint8_t xPASS){
 if ((xPASS>=(40+(35-Time_bar_value)))&&(xPASS<=75)) {return 0b00111100;}
-return 0x00;   
+return 0x00;
 }
 
 uint8_t Return_Progress(uint8_t xPASS){
 if (xPASS==(Progress_bar_value+90)) {return 0b00011000;}
-return 0x00;   
+return 0x00;
 }
 
 void AdjustVarScroll(void){
@@ -547,7 +615,7 @@ case(8):SPRITERECUPE=NEW_LIVE(t,xPASS,yPASS);break;
 default:SPRITERECUPE=0x00;break;
 }
 if ((SPRITERECUPE!=0)||(Sprite2PAINTinBLACK!=254)) {Sprite2PAINTinBLACK=t;goto Fin;}
-}} 
+}}
 Fin:;
 return SPRITERECUPE;
 }
@@ -592,11 +660,11 @@ uint8_t blitzSprite(int8_t xPos,int8_t yPos,uint8_t xPASS,uint8_t yPASS,uint8_t 
 RecupeDecalageY(yPos);
 uint8_t OUTBYTE=0;
 uint8_t WSPRITE=(pgm_read_byte(&SPRITES[0]));
-uint8_t HSPRITE=(pgm_read_byte(&SPRITES[1])); 
+uint8_t HSPRITE=(pgm_read_byte(&SPRITES[1]));
 if ((xPASS>((xPos+(WSPRITE-1))))||(xPASS<xPos)||((LINE_Y>yPASS)||((LINE_Y+(HSPRITE))<yPASS))) {return 0x00;}
 uint8_t Wmax ((HSPRITE*WSPRITE)+1);
 uint8_t PICBYTE=FRAME*(Wmax-1);
-uint8_t SPRITEyLINE=(yPASS-(LINE_Y)); 
+uint8_t SPRITEyLINE=(yPASS-(LINE_Y));
 uint8_t ScanA=(((xPASS-xPos)+(SPRITEyLINE*WSPRITE))+2);
 uint8_t ScanB=(((xPASS-xPos)+((SPRITEyLINE-1)*WSPRITE))+2);
 OUTBYTE=(ScanA>Wmax)?0x00:SplitSpriteDecalageY(DECALAGE,pgm_read_byte(&SPRITES[ScanA+(PICBYTE)]),1);
@@ -618,11 +686,11 @@ uint8_t SplitSpriteDecalageY(uint8_t decalage,uint8_t Input,uint8_t UPorDOWN){
 if (UPorDOWN) {
 return Input<<decalage;
 }else{
-return Input>>(8-decalage); 
+return Input>>(8-decalage);
 }}
 
 void Tiny_Flip(uint8_t MODE){
-uint8_t y,x; 
+uint8_t y,x;
 uint8_t PRINT=0;
 uint8_t PRINT2=8;
 switch(MODE){
@@ -632,12 +700,12 @@ switch(MODE){
   case 3: PRINT=0;PRINT2=8;break;
   default:break;
 }
-for (y = PRINT; y < PRINT2; y++){ 
+for (y = PRINT; y < PRINT2; y++){
     SSD1306.ssd1306_send_command(0xb0 + y);
     SSD1306.ssd1306_send_command(0x00);
     SSD1306.ssd1306_send_command(0x10);
     SSD1306.ssd1306_send_data_start();
-AdjustVarScroll();   
+AdjustVarScroll();
 for (x = 0; x < 128; x++){
   switch(MODE){
    case 0:
@@ -650,13 +718,7 @@ SSD1306.ssd1306_send_data_stop();
 }}
 
 void Sound(uint8_t freq,uint8_t dur){
-if (freq==0) {delay(dur);goto END;}
-for (uint8_t t=0;t<dur;t++){
-if (freq!=0)digitalWrite(4,HIGH); 
-for (uint8_t t=0;t<(255-freq);t++){
-_delay_us(1);}
-digitalWrite(4,LOW);
-for (uint8_t t=0;t<(255-freq);t++){
-_delay_us(1); }}
-END:;
+  beeper.beep(freq, dur);
+}
+
 }
