@@ -435,7 +435,7 @@ void RemoveExplodOnMonsterGrid(SPACE *space){
                 }
         }
 }
-
+//#define SHOW_BG
 uint8_t background(uint8_t x,uint8_t y,SPACE *space){
   #ifdef SHOW_BG
         uint8_t scr=(space->ScrBackV+x);
