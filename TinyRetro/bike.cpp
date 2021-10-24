@@ -242,7 +242,7 @@ New_Games:;
 RESET_FOR_NEW_GAME();
 while(1){
 Tiny_Flip(2);
-if ((digitalRead(1)==0)) {INTROPIC=&START_RACE[0];Sound(200,20);Sound(60,20);goto NEXT_LEVEL;}
+if (isPressed(control::BTN_A)) {INTROPIC=&START_RACE[0];Sound(200,20);Sound(60,20);goto NEXT_LEVEL;}
 }
 NEXT_LEVEL:;
 Tiny_Flip(2);
@@ -250,25 +250,25 @@ _delay_ms(2000);
 ResetSprite();
 Next_Level();
 NEW_START:;
-if ((digitalRead(1)==0)) {goto NEW_START;}
+if (isPressed(control::BTN_A)) {goto NEW_START;}
 uint8_t t=0;
 restore_start_line();
 Tiny_Flip(3);
 intro_sound();
-if ((digitalRead(1)==0)) {goto NEW_START;}
+if (isPressed(control::BTN_A)) {goto NEW_START;}
 animBike=6;
 while(1){
 if (PLANTAGE_0==0){
 if (TRIG_OK==0) {
-if ((analogRead(A0)>=750)&&(analogRead(A0)<950)&&(ACCEL>1)) {BypassWheelupreset=1;if ((Wheel_up<5)&&(Latch1==0)){Wheel_up++;}}
-else if ((analogRead(A0)>500)&&(analogRead(A0)<750)&&(ACCEL>1)) {BypassWheelupreset=1;if ((Wheel_up>0)&&(Latch1==0)){Wheel_up--;if ((Wheel_up==0)&&(FREEAIR==0)) {Wheel_up=1;} }}
+if (isPressed(control::BTN_L)&&(ACCEL>1)) {BypassWheelupreset=1;if ((Wheel_up<5)&&(Latch1==0)){Wheel_up++;}}
+else if (isPressed(control::BTN_R)&&(ACCEL>1)) {BypassWheelupreset=1;if ((Wheel_up>0)&&(Latch1==0)){Wheel_up--;if ((Wheel_up==0)&&(FREEAIR==0)) {Wheel_up=1;} }}
 if ((Not_Move==0)&&(Not_Turn==0)){
-if ((analogRead(A3)>=750)&&(analogRead(A3)<950)) {if (Trackrun_progress<3){Trackrun_progress++;TRIG_OK=1;}}
-else if ((analogRead(A3)>500)&&(analogRead(A3)<750)) {if (Trackrun_progress>0){Trackrun_progress--;TRIG_OK=2; }}
+if (isPressed(control::BTN_D)) {if (Trackrun_progress<3){Trackrun_progress++;TRIG_OK=1;}}
+else if (isPressed(control::BTN_U)) {if (Trackrun_progress>0){Trackrun_progress--;TRIG_OK=2; }}
 }
 if ((TRIG_OK==0)&&(Wheel_up==1)&&(t>0)) {animBike = (animBike==1) ? 6 : 1;}
 }
-if (((digitalRead(1)==0)&&(ENDMAP!=1))&&((FREEAIR==0)||(Wheel_up<=2))&&(End_game==0) ) {
+if ((isPressed(control::BTN_A)&&(ENDMAP!=1))&&((FREEAIR==0)||(Wheel_up<=2))&&(End_game==0) ) {
   if (ACCEL<8){ACCEL=ACCEL+0.10;}
   }else{
     if (ACCEL>1){ACCEL=ACCEL-0.10;}BypassWheelupreset=0;
