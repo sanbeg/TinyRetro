@@ -437,9 +437,13 @@ void RemoveExplodOnMonsterGrid(SPACE *space){
 }
 
 uint8_t background(uint8_t x,uint8_t y,SPACE *space){
+  #ifdef SHOW_BG
         uint8_t scr=(space->ScrBackV+x);
         if ((scr)>127) {scr=(space->ScrBackV+x)-128;}
         return 0xff-pgm_read_byte(&back[((y)*128)+((scr))]);
+    #else
+        return 0;
+    #endif
 }
 
 uint8_t Vesso(uint8_t x,uint8_t y,SPACE *space){
