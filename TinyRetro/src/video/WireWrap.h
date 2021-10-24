@@ -3,7 +3,9 @@
 
 #include "TinyI2CMaster.h"
 
-#include <Wire.h>
+#ifdef CORE_WIRE
+//#include <Wire.h>
+#endif
 
 namespace wirerap {
 
@@ -29,6 +31,8 @@ namespace wirerap {
     }
 
   };
+
+  #ifdef CORE_WIRE
 
 class Core {
 private:
@@ -66,6 +70,7 @@ public:
     Wire.write(data);
   }
 };
+#endif
 
 
 
