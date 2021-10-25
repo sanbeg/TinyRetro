@@ -141,12 +141,12 @@ Sprite[4].y=5;
 Sprite[4].guber=0;
 while(1){
 //joystick
-if (digitalRead(1)==0) {StartGame(&Sprite[0]);}
+if (isPressed(control::BTN_A)) {StartGame(&Sprite[0]);}
 if (INGAME) {
-if ((analogRead(A0)>=750)&&(analogRead(A0)<950)) {Sprite[0].DirectionV=0;}
-else if ((analogRead(A0)>500)&&(analogRead(A0)<750)) {Sprite[0].DirectionV=1;}
-if ((analogRead(A3)>=750)&&(analogRead(A3)<950)) {Sprite[0].DirectionH=1;}
-else if ((analogRead(A3)>500)&&(analogRead(A3)<750)) {Sprite[0].DirectionH=0;}
+if ((isPressed(control::BTN_L))) {Sprite[0].DirectionV=0;}
+else if ((isPressed(control::BTN_R))) {Sprite[0].DirectionV=1;}
+if ((isPressed(control::BTN_D))) {Sprite[0].DirectionH=1;}
+else if ((isPressed(control::BTN_U))) {Sprite[0].DirectionH=0;}
 //fin joystick
 if (TimerGobeactive>1)  {TimerGobeactive--;}else{if (TimerGobeactive==1) {TimerGobeactive=0;Gobeactive=0;}}}
 if (Frame<24) {Frame++;}else{Frame=0;}
