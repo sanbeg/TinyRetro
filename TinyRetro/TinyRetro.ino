@@ -9,11 +9,12 @@
 //play_game(arkanoid);
 //play_game(bike);
 //play_game(bomber);
-play_game(ddug);
+//play_game(ddug);
 //play_game(frogger);
 //play_game(frogger_ata);
 //play_game(gilbert);
 //play_game(invaders);
+play_game(pacman);
 //play_game(space_attack);
 //play_game(ttris);
 

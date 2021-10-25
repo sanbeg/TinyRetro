@@ -3,6 +3,9 @@
  * Compatability class to ease porting games that were previously ported to Gamebuino.
  */
 
+#include <stdint.h>
+#include "Control.h"
+
 struct Gamebuino {
   void begin() {}
   bool update() {

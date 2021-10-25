@@ -1,3 +1,5 @@
+#ifndef CONTROL_
+#define CONTROL_
 
 #include <stdint.h>
 
@@ -17,3 +19,5 @@ bool isPressed(int);
 bool consumePress(int);
 const char * debug(char *);
 };
+
+#endif
