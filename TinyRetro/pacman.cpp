@@ -27,6 +27,27 @@ namespace pacman {
 
 #include "pacman.h"
 
+uint8_t CheckCollisionWithBack(uint8_t, uint8_t, PERSONAGE *);
+uint8_t CollisionPac2Caracter(PERSONAGE *);
+void DotsDestroy(uint8_t);
+uint8_t DotsWrite(uint8_t, uint8_t, PERSONAGE *);
+uint8_t FruitWrite(uint8_t, uint8_t);
+uint8_t LiveWrite(uint8_t, uint8_t);
+uint8_t RecupeBacktoCompH(uint8_t, PERSONAGE *);
+uint8_t RecupeBacktoCompV(uint8_t, PERSONAGE *);
+void RefreshCaracter(PERSONAGE *);
+void ResetVar(void);
+uint8_t ScanHRecupe(uint8_t, uint8_t);
+void Sound(uint8_t, uint8_t);
+uint8_t SplitSpriteDecalageY(uint8_t, uint8_t, uint8_t);
+uint8_t SpriteWrite(uint8_t, uint8_t, PERSONAGE *);
+void StartGame(PERSONAGE *);
+void Tiny_Flip(uint8_t, PERSONAGE *);
+uint8_t Trim(uint8_t, uint8_t, uint8_t);
+uint8_t background(uint8_t, uint8_t);
+uint8_t checkDotPresent(uint8_t);
+uint8_t return_if_sprite_present(uint8_t, PERSONAGE *, uint8_t);
+
 // var public
 uint8_t LEVELSPEED;
 uint8_t GobbingEND;
