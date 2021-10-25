@@ -19,8 +19,13 @@
 //the code work at 16MHZ internal
 //and use ssd1306xled Library for SSD1306 oled display 128x64
 //Program chip with arduino uno as isp at 16 mhz internal!
-#include <ssd1306xled.h>
-#include "spritebank.h"
+#include "src/video/ssd1306xled.h"
+#include "Beeper.h"
+#include "Control.h"
+
+namespace pacman {
+
+#include "pacman.h"
 
 // var public
 uint8_t LEVELSPEED;
@@ -33,6 +38,8 @@ uint8_t add;
 uint8_t dotsMem[9];
 int8_t dotscount;
 uint8_t Frame;
+
+Beeper <> beeper;
 // fin var public
 
 enum {PACMAN=0,FANTOME=1,FRUIT=2};
@@ -52,10 +59,9 @@ Frame=0;}
 
 void setup() {
 SSD1306.ssd1306_init();
-pinMode(1,INPUT);
-pinMode(4,OUTPUT);
-pinMode(A0,INPUT); 
-pinMode(A3,INPUT);}
+control::setup();
+beeper.setup();
+}
 
 void StartGame(PERSONAGE *Sprite){
 if (INGAME==0) {
@@ -78,7 +84,7 @@ LIVE=3;
 goto New;
 NEWLEVEL:
 if (LEVELSPEED>10) {LEVELSPEED=LEVELSPEED-10;
-if ((LEVELSPEED==160)||(LEVELSPEED==120)||(LEVELSPEED==80)||(LEVELSPEED==40)||(LEVELSPEED==10)){    
+if ((LEVELSPEED==160)||(LEVELSPEED==120)||(LEVELSPEED==80)||(LEVELSPEED==40)||(LEVELSPEED==10)){
 if (LIVE<3) {LIVE++; for(t=0;t<=4;t++){
 Sound(80,100);delay(300);
 }}}}
@@ -130,7 +136,7 @@ if (Frame%2==0) {
 Tiny_Flip(0,&Sprite[0]);
 if (INGAME==1){
 for (uint8_t t=0;t<=139;t=t+2){
-Sound(pgm_read_byte(&Music[t])-8,(pgm_read_byte(&Music[t+1])-100)); 
+Sound(pgm_read_byte(&Music[t])-8,(pgm_read_byte(&Music[t+1])-100));
 }INGAME=2;}
 }else{
 for(t=0;t<63;t++){
@@ -146,9 +152,9 @@ uint8_t ReturnCollision=0;
 #define xmin(I) (Sprite[I].x)
 #define ymax(I) ((Sprite[I].y*8)+Sprite[I].Decalagey+6)
 #define ymin(I) ((Sprite[I].y*8)+Sprite[I].Decalagey)
-if ((INGAME)) {    
+if ((INGAME)) {
 for (uint8_t t=1;t<=4;t++){
-if ((xmax(0)<xmin(t))||(xmin(0)>xmax(t))||(ymax(0)<ymin(t))||(ymin(0)>ymax(t))) {}else{ 
+if ((xmax(0)<xmin(t))||(xmin(0)>xmax(t))||(ymax(0)<ymin(t))||(ymin(0)>ymax(t))) {}else{
 if (Gobeactive) {if (Sprite[t].guber!=1) {Sound(20,100);Sound(2,100);}Sprite[t].guber=1;ReturnCollision=0;}else{ if (Sprite[t].guber==1) {ReturnCollision=0;}else{ReturnCollision=1;}}
 }}}return ReturnCollision;}
 
@@ -182,7 +188,7 @@ Sprite[t].Decalagey=memdecalagey;
 if (t==0) {
 if (Frame%2==0) {
 if (Sprite[t].DirectionH==1) {Sprite[t].DirectionAnim=0;}
-if (Sprite[t].DirectionH==0) {Sprite[t].DirectionAnim=(2*3);} 
+if (Sprite[t].DirectionH==0) {Sprite[t].DirectionAnim=(2*3);}
 if (Sprite[t].DirectionV==1) {Sprite[t].DirectionAnim=(3*3);}
 if (Sprite[t].DirectionV==0) {Sprite[t].DirectionAnim=(1*3);}
 }}else{
@@ -194,19 +200,19 @@ if (Sprite[t].DirectionH==0) {Sprite[t].DirectionAnim=2;}
 if (t==0) {
 if (Frame%2==0) {
 if (Sprite[0].switchanim==0) {
-if (Sprite[0].anim<2) {Sprite[0].anim++;}else{Sprite[0].switchanim=1;} 
+if (Sprite[0].anim<2) {Sprite[0].anim++;}else{Sprite[0].switchanim=1;}
 }else{
-if (Sprite[0].anim>0) {Sprite[0].anim--;}else{Sprite[0].switchanim=0;}  
+if (Sprite[0].anim>0) {Sprite[0].anim--;}else{Sprite[0].switchanim=0;}
 }}}else{
 if ((Sprite[t].guber==1)&&(Sprite[t].x>=74)&&(Sprite[t].x<=76)&&(Sprite[t].y>=2)&&(Sprite[t].y<=4)) {Sprite[t].guber=0;}
 if  (Frame%2==0) {
-if (Sprite[t].anim<1) {Sprite[t].anim++;}else{Sprite[t].anim=0; } 
+if (Sprite[t].anim<1) {Sprite[t].anim++;}else{Sprite[t].anim=0; }
 }}}}
 
 uint8_t CheckCollisionWithBack(uint8_t SpriteCheck,uint8_t HorVcheck,PERSONAGE *Sprite){
 uint8_t BacktoComp;
 if (HorVcheck==1) {
-BacktoComp=RecupeBacktoCompV(SpriteCheck,Sprite); 
+BacktoComp=RecupeBacktoCompV(SpriteCheck,Sprite);
 }else{
 BacktoComp=RecupeBacktoCompH(SpriteCheck,Sprite);}
 if ((BacktoComp)!=0) {return 1;}else{return 0;}}
@@ -253,7 +259,7 @@ if (Sprite[SpriteCheck].DirectionH==0) {
 uint8_t RECUPE=(ScanHRecupe(0,Sprite[SpriteCheck].Decalagey));
 for(uint8_t t=0;t<=6;t++){
 if ((((Sprite[SpriteCheck].y)*128)+(Sprite[SpriteCheck].x+t)>1023)||(((Sprite[SpriteCheck].y)*128)+(Sprite[SpriteCheck].x+t)<0)) {TempPGMByte=0x00;}else{
- TempPGMByte=(pgm_read_byte(&back[((Sprite[SpriteCheck].y)*128)+(Sprite[SpriteCheck].x+t)])); 
+ TempPGMByte=(pgm_read_byte(&back[((Sprite[SpriteCheck].y)*128)+(Sprite[SpriteCheck].x+t)]));
 }
 #define CHECKCOLLISION ((RECUPE)&(TempPGMByte))
 if  (CHECKCOLLISION!=0) {return 1;}
@@ -270,9 +276,9 @@ if  (CHECKCOLLISION2!=0) {return 1;}
 }}return 0;}
 
 void Tiny_Flip(uint8_t render0_picture1,PERSONAGE *Sprite){
-uint8_t y,x; 
+uint8_t y,x;
 dotscount=-1;
-for (y = 0; y < 8; y++){ 
+for (y = 0; y < 8; y++){
     SSD1306.ssd1306_send_command(0xb0 + y); // page0 - page1
     SSD1306.ssd1306_send_command(0x00);   // low column start address
     SSD1306.ssd1306_send_command(0x10);   // high column start address
@@ -304,10 +310,10 @@ uint8_t mem1=pgm_read_byte(&dots[x+(128*y)]);
 if (mem1!=0b00000000) {
 dotscount++;
  switch(dotscount){
-  case 0:  
-  case 1: 
-  case 12: 
-  case 13: 
+  case 0:
+  case 1:
+  case 12:
+  case 13:
   case 50:
   case 51:
   case 62:
@@ -354,13 +360,13 @@ uint8_t SplitSpriteDecalageY(uint8_t decalage,uint8_t Input,uint8_t UPorDOWN){
 if (UPorDOWN) {
 return Input<<decalage;
 }else{
-return Input>>(8-decalage); 
+return Input>>(8-decalage);
 }}
 
 uint8_t SpriteWrite(uint8_t x,uint8_t y,PERSONAGE  *Sprite){
 uint8_t var1=0;
 uint8_t AddBin=0b00000000;
-while(1){ 
+while(1){
 if (Sprite[var1].y==y) {
 AddBin=AddBin|SplitSpriteDecalageY(Sprite[var1].Decalagey,return_if_sprite_present(x,Sprite,var1),1);
 }else if (((Sprite[var1].y+1)==y)&&(Sprite[var1].Decalagey!=0)) {
@@ -369,12 +375,12 @@ AddBin=AddBin|SplitSpriteDecalageY(Sprite[var1].Decalagey,return_if_sprite_prese
 var1++;
 if (var1==5) {break;}
 }return AddBin;}
-  
+
 uint8_t return_if_sprite_present(uint8_t x,PERSONAGE  *Sprite,uint8_t SpriteNumber){
 uint8_t ADDgobActive;
 uint8_t ADDGober;
-if  ((x>=Sprite[SpriteNumber].x)&&(x<(Sprite[SpriteNumber].x+8))) { 
-if (SpriteNumber!=0) { 
+if  ((x>=Sprite[SpriteNumber].x)&&(x<(Sprite[SpriteNumber].x+8))) {
+if (SpriteNumber!=0) {
 if (Sprite[SpriteNumber].guber==1) {
 ADDgobActive=1*(4*8);
 ADDGober=Sprite[SpriteNumber].guber*(4*8);
@@ -385,7 +391,7 @@ ADDGober=0;
 ADDGober=0;
 ADDgobActive=0;
 }
-if ((INGAME==0)&&(SpriteNumber==0)) {  return 0;}     
+if ((INGAME==0)&&(SpriteNumber==0)) {  return 0;}
 return pgm_read_byte(&caracters[((x-Sprite[SpriteNumber].x)+(8*(Sprite[SpriteNumber].type*12)))+(Sprite[SpriteNumber].anim*8)+(Sprite[SpriteNumber].DirectionAnim*8)+(ADDgobActive)+(ADDGober)]);
 }return 0;}
 
@@ -394,11 +400,7 @@ return pgm_read_byte(&BackBlitz[((y)*128)+((x))]);
 }
 
 void Sound(uint8_t freq,uint8_t dur){
-for (uint8_t t=0;t<dur;t++){
-if (freq!=0)digitalWrite(4,HIGH); 
-for (uint8_t t=0;t<(255-freq);t++){
-_delay_us(1);}
-digitalWrite(4,LOW);
-for (uint8_t t=0;t<(255-freq);t++){
-_delay_us(1); }}}
+  beeper.beep(freq, dur);
+}
 
+} //namespace
