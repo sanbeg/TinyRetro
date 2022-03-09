@@ -28,16 +28,16 @@
 
 */
 #include <EEPROM.h>
-#include "font6x8AJ2.h"
+#include "../text/font6x8AJ2.h"
 #include <avr/pgmspace.h>
 // #include <avr/interrupt.h> // needed for the additional interrupt
 //#include "ssd1306.h"
-#include "src/video/ssd1306xled.h"
-#include "oled_text.h"
+#include "../video/ssd1306xled.h"
+#include "../text/oled_text.h"
 
-#include "attiny_sleep.h"
-#include "Beeper.h"
-#include "Control.h"
+#include "../io/attiny_sleep.h"
+#include "../io/Beeper.h"
+#include "../io/Control.h"
 
 #include "Gamebuino.h"
 

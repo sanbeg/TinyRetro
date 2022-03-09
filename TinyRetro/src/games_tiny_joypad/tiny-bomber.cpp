@@ -20,9 +20,9 @@
 //and use ssd1306xled Library for SSD1306 oled display 128x64
 //Program chip with arduino uno as isp at 16 mhz internal!
 
-#include "src/video/ssd1306xled.h"
-#include "Control.h"
-#include "Beeper.h"
+#include "../video/ssd1306xled.h"
+#include "../io/Control.h"
+#include "../io/Beeper.h"
 #include <util/delay.h>
 #include <Arduino.h>
 

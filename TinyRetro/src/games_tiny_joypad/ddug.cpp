@@ -23,9 +23,9 @@
 //Program chip with arduino uno as isp at 16 mhz internal!
 
 
-#include "src/video/ssd1306xled.h"
-#include "Beeper.h"
-#include "Control.h"
+#include "../video/ssd1306xled.h"
+#include "../io/Beeper.h"
+#include "../io/Control.h"
 
 namespace ddug {
 #include "ddug.h"

@@ -4,7 +4,7 @@
  */
 
 #include <stdint.h>
-#include "Control.h"
+#include "../io/Control.h"
 
 struct Gamebuino {
   void begin() {}

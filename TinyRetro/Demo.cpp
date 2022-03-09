@@ -1,6 +1,6 @@
 
-#include "Control.h"
-#include "oled_text.h"
+#include "src/io/Control.h"
+#include "src/text/oled_text.h"
 
 namespace demo {
 
@@ -30,7 +30,7 @@ void loop() {
   if (control::consumePress(control::BTN_U)) {
     -- doty;
   }
-  
+
   if (control::consumePress(control::BTN_D)) {
     ++ doty;
   }
@@ -38,7 +38,7 @@ void loop() {
   if (control::consumePress(control::BTN_L)) {
     dotx -= 6;
   }
-  
+
   if (control::consumePress(control::BTN_R)) {
     dotx += 6;
   }

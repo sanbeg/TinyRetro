@@ -1,7 +1,7 @@
 
 #include "src/video/ssd1306xled.h"
 
-#include "Control.h"
+#include "src/io/Control.h"
 
 #define play_game(g) namespace g{void loop();void setup();} namespace game{using namespace g;}
 

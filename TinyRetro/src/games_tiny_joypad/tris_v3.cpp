@@ -23,9 +23,9 @@
 //Program chip with arduino uno as isp at 16 mhz internal!
 
 #include<EEPROM.h>
-#include "src/video/ssd1306xled.h"
-#include "Control.h"
-#include "Beeper.h"
+#include "../video/ssd1306xled.h"
+#include "../io/Control.h"
+#include "../io/Beeper.h"
 #include "tris_spritebank.h"
 
 namespace ttris {

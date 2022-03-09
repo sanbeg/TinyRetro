@@ -26,11 +26,11 @@
 */
 
 #include "src/video/ssd1306xled.h"
-#include "oled_text.h"
+#include "src//text/oled_text.h"
 
-#include "attiny_sleep.h"
-#include "Beeper.h"
-#include "Control.h"
+#include "src/io/attiny_sleep.h"
+#include "src/io/Beeper.h"
+#include "src/io/Control.h"
 
 #include <stdint.h>
 #include <EEPROM.h>

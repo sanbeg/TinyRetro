@@ -28,16 +28,16 @@
     http://www.re-innovation.co.uk/web12/index.php/en/blog-75/306-sleep-modes-on-attiny85
 */
 #include <EEPROM.h>
-#include "font6x8AJ2.h"
+#include "src/text/font6x8AJ2.h"
 #include <avr/pgmspace.h>
 // #include <avr/interrupt.h> // needed for the additional interrupt
 //#include "ssd1306.h"
 #include "src/video/ssd1306xled.h"
-#include "oled_text.h"
+#include "src/text/oled_text.h"
 
-#include "attiny_sleep.h"
-#include "Beeper.h"
-#include "Control.h"
+#include "src/io/attiny_sleep.h"
+#include "src/io/Beeper.h"
+#include "src/io/Control.h"
 
 
 namespace frogger_ata {
