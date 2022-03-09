@@ -27,6 +27,7 @@
 #include "../io/Control.h"
 #include "../io/Beeper.h"
 #include "tris_spritebank.h"
+#include "tiny_joypad_compat.h"
 
 namespace ttris {
 /** prototypes **/

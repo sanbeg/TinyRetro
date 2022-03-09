@@ -26,6 +26,7 @@
 #include "../video/ssd1306xled.h"
 #include "../io/Beeper.h"
 #include "../io/Control.h"
+#include "tiny_joypad_compat.h"
 
 namespace ddug {
 #include "ddug.h"

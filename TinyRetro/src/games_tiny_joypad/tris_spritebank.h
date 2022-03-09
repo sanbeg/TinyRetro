@@ -24,13 +24,6 @@
 
 #include <avr/pgmspace.h>
 
-#define TINYJOYPAD_LEFT  isPressed(control::BTN_L)
-#define TINYJOYPAD_RIGHT isPressed(control::BTN_R)
-#define TINYJOYPAD_DOWN isPressed(control::BTN_D)
-#define TINYJOYPAD_UP  isPressed(control::BTN_U)
-#define BUTTON_DOWN isPressed(control::BTN_A)
-#define BUTTON_UP !isPressed(control::BTN_A)
-
 //public var
 uint8_t Grid_TTRIS[12][3]={{0}};
 const uint8_t  MEM_TTTRIS[16]= {0,2,0,4,3,7,6,9,9,12,11,15,14,17,17,19,};
@@ -61,7 +54,7 @@ int8_t DEPLACEMENT_YY_TTRIS;
 
 const uint8_t  H_Grid_TTTRIS[] PROGMEM= {
 0,0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,
-7,7,8,8,8,9,9,9,10,10,10,11,11,11,12,12,12,  
+7,7,8,8,8,9,9,9,10,10,10,11,11,11,12,12,12,
 };
 
 const uint8_t Pieces_TTRIS[] PROGMEM= {

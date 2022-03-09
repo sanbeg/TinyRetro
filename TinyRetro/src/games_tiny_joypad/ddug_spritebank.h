@@ -26,13 +26,6 @@
 
 enum {HAUT=0,DROITE=1,BAS=2,GAUCHE=3};
 
-#define TINYJOYPAD_LEFT  isPressed(control::BTN_L)
-#define TINYJOYPAD_RIGHT isPressed(control::BTN_R)
-#define TINYJOYPAD_DOWN isPressed(control::BTN_D)
-#define TINYJOYPAD_UP  isPressed(control::BTN_U)
-#define BUTTON_DOWN isPressed(control::BTN_A)
-#define BUTTON_UP !isPressed(control::BTN_A)
-
 const int8_t ENEMY_ENABLE_TDDUG[] PROGMEM= {
 1,1,0,0,
 1,1,1,0,
