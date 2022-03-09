@@ -26,7 +26,7 @@
 #include "src/video/ssd1306xled.h"
 #include "Control.h"
 #include "Beeper.h"
-#include "spritebank_TTRIS.h"
+#include "tris_spritebank.h"
 
 namespace ttris {
 /** prototypes **/
