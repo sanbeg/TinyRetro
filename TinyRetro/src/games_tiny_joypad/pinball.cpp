@@ -106,7 +106,7 @@ void setup() {
 
 //<<<<<<<<<<<<<<<<<<<MAIN>>>>>>>>>>>>>>>>>
 void loop() {
-digitalWrite(4,LOW);
+//digitalWrite(4,LOW);
 NEWGAME:
 totalpush=0;
 totalBall=5;
@@ -170,6 +170,7 @@ for (t=50;t>0;t--){
 beeper.beep(t, 6);}}
 
 void Sound(uint8_t freq,uint8_t dur){
+  /*
 for (uint8_t t=0;t<dur;t++){
 digitalWrite(4,HIGH); 
 for (uint8_t t=0;t<(255-freq);t++){
@@ -177,7 +178,8 @@ _delay_us(1);}
 digitalWrite(4,LOW);
 for (uint8_t t=0;t<(255-freq);t++){
 _delay_us(1); }
-}}
+
+}*/}
 
 void BallupDate(BALL *B){
 SimulateMove(B);
