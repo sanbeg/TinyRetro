@@ -108,7 +108,7 @@ while(1){
 if (VARIABLE.Frame%8==0) {
 if ((isPressed(control::BTN_D))) {if (VARIABLE.TrackBaryDecal<7) {if (VARIABLE.TrackBaryDecal+(VARIABLE.TrackBary*8)<44){ VARIABLE.TrackBaryDecal++;}}else{VARIABLE.TrackBaryDecal=0;VARIABLE.TrackBary++;}}
 if ((isPressed(control::BTN_U))) {if (VARIABLE.TrackBaryDecal>0) {if (VARIABLE.TrackBaryDecal+(VARIABLE.TrackBary*8)>4){ VARIABLE.TrackBaryDecal--;}}else{VARIABLE.TrackBaryDecal=7;VARIABLE.TrackBary--;}}
-if ((VARIABLE.launch==0)&&(digitalRead(1)==LOW)) {VARIABLE.launch=1;}
+if ((VARIABLE.launch==0)&&(isPressed(control::BTN_A)|isPressed(control::BTN_R))) {VARIABLE.launch=1;}
 if (VARIABLE.launch==0) {VARIABLE.Ballypos=((VARIABLE.TrackBary*8)+VARIABLE.TrackBaryDecal)+10;VARIABLE.SIMBallypos=VARIABLE.Ballypos;}
 }
 if ((VARIABLE.Frame%VARIABLE.LEVELSPEED==0)) {UpdateBall(&VARIABLE);}

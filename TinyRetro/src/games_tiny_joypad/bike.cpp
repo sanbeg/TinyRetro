@@ -278,9 +278,18 @@ if ((Wheel_up>1)&&(Latch1==0)&&(FREEAIR==0)){Wheel_up--;}
 }else{PLANTAGE();}
 dinamic_adj();
 for (t=0;t<CHECK_SPEED_ADJ(ACCEL);t++){
-  INCREMENTE_SCROLL();if (DIV1==3) { digitalWrite(4,HIGH);_delay_us(10);digitalWrite(4,LOW);TRACK_RUN_ADJ();
-  if (Wheel_up!=1) {animBike=Wheel_up;}
-  DIV1=0;}else{DIV1++;}}
+  INCREMENTE_SCROLL();
+  if (DIV1==3) { 
+    Sound(1, 10);
+    TRACK_RUN_ADJ();
+    if (Wheel_up!=1) {
+      animBike=Wheel_up;
+    }
+    DIV1=0;
+  } else{
+    DIV1++;
+  }
+  }
   if (Pause==1) {if (Live>-1) {Live--;}Pause=0;}
 Latch1++;
 if (Latch1==4){ Latch1=0;}

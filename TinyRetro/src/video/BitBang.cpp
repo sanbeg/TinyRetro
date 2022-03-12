@@ -3,14 +3,6 @@
 #include <avr/io.h>
 
 namespace wirerap {
-
-  #ifdef CORE_WIRE
-  // hack, should put core into its own cpp
-  uint8_t Core::address;
-  uint8_t Core::cnt;
-  uint8_t Core::reg;
-#endif
-
 #define I2C_PORT  PORTA
 #define I2C_DDR DDRA
 #define SSD1306_SCL   PORTA4 //PORTB4  // SCL, Pin 4 on SSD1306 Board - for webbogles board
