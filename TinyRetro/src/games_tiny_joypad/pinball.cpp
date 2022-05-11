@@ -22,6 +22,7 @@
 #include "../video/ssd1306xled.h"
 #include "../io/Beeper.h"
 #include "../io/Control.h"
+#include "tiny_joypad_compat.h"
 #include <math.h>
 
 //<<<<<<<<<<<<<<<<<<<VARIABLE PUBLIQUE>>>>>>>>>>>>>>>>>
@@ -30,21 +31,6 @@
 
 namespace pinball {
 #include "pinball_spritebank.h"
-
-typedef struct BALL{
-float x=0;
-float y=0;
-float Speedx=0;
-float Speedy=0;
-float SIMx=0;
-float SIMy=0;
-float SIMSpeedx=0;
-float SIMSpeedy=0;
-float DecelX=0;
-float DecelY=0;
-uint8_t resetBall=0;
-uint8_t grid[2][3]={{0}};
-}BALL;
 
 void BallupDate(BALL *);
 uint8_t CheckColisionType(BALL *);
@@ -81,7 +67,20 @@ uint8_t SpringBar=SPRINGLONG;
 uint8_t MemExa[3][3]={{0}};
 int8_t trigFlipG=0;
 int8_t trigFlipD=0;
-
+typedef struct BALL{
+float x=0;
+float y=0;
+float Speedx=0;
+float Speedy=0;
+float SIMx=0;
+float SIMy=0;
+float SIMSpeedx=0;
+float SIMSpeedy=0;
+float DecelX=0;
+float DecelY=0;
+uint8_t resetBall=0;
+uint8_t grid[2][3]={{0}};
+}BALL;
 //<<<<<<<<<<<<<<<<<<<FIN VARIABLE PUBLIQUE>>>>>>>>>>>>>>>>>
 
 //<<<<<<<<<<<<<<<<<<<SETUP>>>>>>>>>>>>>>>>>
@@ -106,7 +105,7 @@ void setup() {
 
 //<<<<<<<<<<<<<<<<<<<MAIN>>>>>>>>>>>>>>>>>
 void loop() {
-//digitalWrite(4,LOW);
+digitalWrite(4,LOW);
 NEWGAME:
 totalpush=0;
 totalBall=5;
@@ -170,7 +169,6 @@ for (t=50;t>0;t--){
 beeper.beep(t, 6);}}
 
 void Sound(uint8_t freq,uint8_t dur){
-  /*
 for (uint8_t t=0;t<dur;t++){
 digitalWrite(4,HIGH); 
 for (uint8_t t=0;t<(255-freq);t++){
@@ -178,8 +176,7 @@ _delay_us(1);}
 digitalWrite(4,LOW);
 for (uint8_t t=0;t<(255-freq);t++){
 _delay_us(1); }
-
-}*/}
+}}
 
 void BallupDate(BALL *B){
 SimulateMove(B);
