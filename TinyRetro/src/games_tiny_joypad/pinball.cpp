@@ -32,6 +32,21 @@
 namespace pinball {
 #include "pinball_spritebank.h"
 
+typedef struct BALL{
+float x=0;
+float y=0;
+float Speedx=0;
+float Speedy=0;
+float SIMx=0;
+float SIMy=0;
+float SIMSpeedx=0;
+float SIMSpeedy=0;
+float DecelX=0;
+float DecelY=0;
+uint8_t resetBall=0;
+uint8_t grid[2][3]={{0}};
+}BALL;
+
 void BallupDate(BALL *);
 uint8_t CheckColisionType(BALL *);
 uint8_t ColisionCheck(float, float, BALL *);
@@ -67,20 +82,7 @@ uint8_t SpringBar=SPRINGLONG;
 uint8_t MemExa[3][3]={{0}};
 int8_t trigFlipG=0;
 int8_t trigFlipD=0;
-typedef struct BALL{
-float x=0;
-float y=0;
-float Speedx=0;
-float Speedy=0;
-float SIMx=0;
-float SIMy=0;
-float SIMSpeedx=0;
-float SIMSpeedy=0;
-float DecelX=0;
-float DecelY=0;
-uint8_t resetBall=0;
-uint8_t grid[2][3]={{0}};
-}BALL;
+
 //<<<<<<<<<<<<<<<<<<<FIN VARIABLE PUBLIQUE>>>>>>>>>>>>>>>>>
 
 //<<<<<<<<<<<<<<<<<<<SETUP>>>>>>>>>>>>>>>>>
