@@ -21,6 +21,10 @@
 //the code work at 16MHZ internal
 //Program the chip with an arduino uno in "Arduino as ISP" mode.
 
+#include "../video/ssd1306xled.h"
+
+namespace {
+
 //prototype
 void TinyOLED_init(void);
 void TinyOLED_Begin(void);
@@ -84,3 +88,4 @@ void TinyOLED_Data_Start(uint8_t Y_){
 }
 
 
+} // anon namespace

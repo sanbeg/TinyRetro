@@ -7,13 +7,14 @@
 
 //play_game(demo);
 //play_game(arkanoid);
-play_game(bert);
+//play_game(bert);
 //play_game(bike);
 //play_game(bomber);
 //play_game(ddug);
 //play_game(frogger);
 //play_game(gilbert);
 //play_game(invaders);
+play_game(morpion);
 //play_game(pacman);
 //play_game(pinball);
 //play_game(ttris);

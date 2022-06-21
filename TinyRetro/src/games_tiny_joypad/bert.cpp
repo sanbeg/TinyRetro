@@ -21,14 +21,13 @@
 //the code work at 16MHZ internal
 //Program the chip with an arduino uno in "Arduino as ISP" mode.
 
-#include "../video/ssd1306xled.h"
+#include "TinyDriver.h"
 #include "../io/Control.h"
 #include "../io/Beeper.h"
 
 // var public
 
 namespace bert {
-#include "TinyDriver.h"
 #include "bert_spritebank.h"
 
 void Ball_move_update(uint8_t, Sprite *);
@@ -583,16 +582,9 @@ TinyOLED_Send(Recupe(x,y,DATA));}
 TinyOLED_End();
 }}
 
+
 void Sound(uint8_t freq,uint8_t dur){
-if (freq==0) {delay(dur);goto END;}
-for (uint8_t t=0;t<dur;t++){
-if (freq!=0)digitalWrite(4,HIGH); 
-for (uint8_t t=0;t<(255-freq);t++){
-_delay_us(1);}
-digitalWrite(4,LOW);
-for (uint8_t t=0;t<(255-freq);t++){
-_delay_us(1); }}
-END:;
+  beeper.beep(freq, dur);
 }
 
 } //namespace
